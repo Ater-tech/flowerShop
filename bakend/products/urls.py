@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import FlowerInfo
-urlpatterns = [
-    path('', FlowerInfo, name = 'product')
-]
+from .views import FlowerViewSet
+from rest_framework.routers import DefaultRouter
+
+
+router = DefaultRouter()
+router.register("flowers", FlowerViewSet)
+
+urlpatterns = router.urls

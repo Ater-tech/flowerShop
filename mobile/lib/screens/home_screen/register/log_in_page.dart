@@ -17,60 +17,142 @@ class _LogInState extends State<LogInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Welcome to Flower online SHOP"),
-        backgroundColor: Colors.orangeAccent,
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 25, vertical: 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: username,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            TextFormField(
-              controller: email,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            TextFormField(
-              controller: password,
-              keyboardType: TextInputType.visiblePassword,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-            ),
-            SizedBox(height: 40),
-            ElevatedButton(onPressed: () {}, child: Text("Log in")),
-            SizedBox(height: 10),
-            Text("If you don't have an account yet, just click this:"),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CounterPage()),
-                );
-              },
-              child: Text("Register"),
-            ),
-          ],
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF73AEF5),
+              Color(0xFF61A4F1),
+              Color(0xFF478DE0),
+              Color(0xFF398AE5),
+            ],
+            stops: [0.1, 0.4, 0.7, 0.9],
+          ),
         ),
+        child: Padding(
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 40, vertical: 120),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Sign in",
+                  style: TextStyle(
+                    fontFamily: 'OpenSams',
+                    fontSize: 30,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 30),
+
+                //username
+                userName(),
+                SizedBox(height: 10),
+
+                //email
+                emailMethod(),
+                SizedBox(height: 10),
+
+                //password
+                passwordMethod(),
+                Container(
+                  alignment: Alignment.bottomRight,
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 40),
+                ElevatedButton(onPressed: () {}, child: Text("Log in")),
+                SizedBox(height: 10),
+                Text("If you don't have an account yet, just click this:"),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CounterPage()),
+                    );
+                  },
+                  child: Text("Register"),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  TextFormField passwordMethod() {
+    return TextFormField(
+      controller: password,
+      keyboardType: TextInputType.visiblePassword,
+      obscureText: true,
+      decoration: InputDecoration(
+        suffixIcon: Icon(Icons.lock, color: Colors.blue),
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.black54),
+        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+    );
+  }
+
+  TextFormField emailMethod() {
+    return TextFormField(
+      controller: email,
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+        suffixIcon: Icon(Icons.email, color: Colors.blue),
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.black54),
+        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+    );
+  }
+
+  TextFormField userName() {
+    return TextFormField(
+      controller: username,
+      keyboardType: TextInputType.text,
+      cursorColor: Colors.blueAccent,
+      decoration: InputDecoration(
+        hintText: "User name ...",
+        suffixIcon: Icon(Icons.person, color: Colors.blue),
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.black54),
+        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }

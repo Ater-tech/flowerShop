@@ -14,6 +14,7 @@ class _LogInState extends State<LogInPage> {
   final username = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
+  bool rememberMe = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,28 +61,78 @@ class _LogInState extends State<LogInPage> {
 
                 //password
                 passwordMethod(),
-                Container(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
+                forgotPassword(),
+
                 SizedBox(height: 40),
-                ElevatedButton(onPressed: () {}, child: Text("Log in")),
+                logIn(context),
                 SizedBox(height: 10),
-                Text("If you don't have an account yet, just click this:"),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CounterPage()),
-                    );
-                  },
-                  child: Text("Register"),
+                withEmailSignIn(context),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text("--OR--", style: TextStyle(color: Colors.white)),
+                    SizedBox(height: 10),
+                    Text("Sign in with", style: TextStyle(color: Colors.white)),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        InkWell(
+                          onTap: () {},
+                          child: Container(
+                            padding: EdgeInsets.all(6),
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(0, 2),
+                                  blurRadius: 10,
+                                ),
+                              ],
+
+                              // image: DecorationImage(
+                              //   image: AssetImage("assets/brands/facebook.png"),
+                              //   // fit: BoxFit.cover,
+                              // ),
+                            ),
+                            child: ClipRRect(
+                              child: Image.asset("assets/brands/facebook.png"),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Container(
+                            padding: EdgeInsets.all(6),
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(0, 2),
+                                  blurRadius: 6,
+                                ),
+                              ],
+                              // image: DecorationImage(
+                              //   image: AssetImage("assets/brands/google.png"),
+                              //   fit: BoxFit.cover,
+                              // ),
+                            ),
+                            child: ClipRRect(
+                              child: Image.asset("assets/brands/google.png"),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -91,12 +142,78 @@ class _LogInState extends State<LogInPage> {
     );
   }
 
+  Row withEmailSignIn(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Don't have an account", style: TextStyle(color: Colors.white)),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CounterPage()),
+            );
+          },
+          child: Text(
+            "Sign Up",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+
+  ElevatedButton logIn(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {},
+      child: SizedBox(
+        width: MediaQuery.sizeOf(context).width,
+        child: Text(
+          "LOGIN",
+          style: TextStyle(color: Colors.blue),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Row forgotPassword() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Checkbox(
+              value: rememberMe,
+              activeColor: Colors.white,
+              onChanged: (val) {
+                setState(() {
+                  rememberMe = val!;
+                });
+              },
+            ),
+            Text("Remember Me", style: TextStyle(color: Colors.white)),
+          ],
+        ),
+        TextButton(
+          onPressed: () {},
+          child: Text(
+            "Forgot Password?",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+
   TextFormField passwordMethod() {
     return TextFormField(
       controller: password,
       keyboardType: TextInputType.visiblePassword,
       obscureText: true,
       decoration: InputDecoration(
+        hintText: "password",
         suffixIcon: Icon(Icons.lock, color: Colors.blue),
         filled: true,
         fillColor: Colors.white,
@@ -118,6 +235,7 @@ class _LogInState extends State<LogInPage> {
       controller: email,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
+        hintText: "Email ...",
         suffixIcon: Icon(Icons.email, color: Colors.blue),
         filled: true,
         fillColor: Colors.white,

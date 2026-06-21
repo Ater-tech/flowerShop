@@ -69,6 +69,8 @@ flutter:
   assets:
     - assets/photos/appbar.png
     - assets/photos/no_image.jpg
+    - assets/brands/facebook.png
+    - assets/brands/google.png
     - .env
   #   - images/a_dot_ham.jpeg
 

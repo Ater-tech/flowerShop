@@ -4,15 +4,16 @@ import 'package:mobile/screens/home_screen/products_list_ui.dart';
 import 'package:mobile/server/flower_api_server.dart';
 import 'package:mobile/screens/crud_product/add_product_page.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MainPage> createState() => _ProductState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ProductState extends State<MainPage> {
   Set<int> favItems = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

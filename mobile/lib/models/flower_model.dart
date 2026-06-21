@@ -7,7 +7,7 @@ class FlowerModel {
   double price;
   bool aviable;
   DateTime created;
-
+  bool fav;
   FlowerModel({
     required this.name,
     required this.shopName,
@@ -17,6 +17,7 @@ class FlowerModel {
     required this.price,
     required this.aviable,
     required this.created,
+    required this.fav,
   });
 
   factory FlowerModel.fromJSON(Map<String, dynamic> data) {
@@ -30,6 +31,7 @@ class FlowerModel {
       aviable: data['aviable'],
       // aviable: bool.parse(data['aviable']),
       created: DateTime.parse(data['created']),
+      fav: data['is_favourite'],
     );
   }
 }

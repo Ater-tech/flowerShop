@@ -12,7 +12,7 @@ class ShopAsistense(models.Model):
         return self.firstname
     
 class ProductModel(models.Model):
-    name = models.CharField(max_length=50, help_text= "Enter the name of the flower")
+    name = models.CharField(max_length=50, help_text= "Enter the name of the flower", default="No named")
     shop_name = models.CharField(max_length=50)
     image = models.ImageField(upload_to="images/")
     description = models.TextField(max_length=1500)
@@ -21,7 +21,7 @@ class ProductModel(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=3)
     aviable = models.BooleanField()
     created = models.DateTimeField(auto_now_add=True)
-
+    is_favourite = models.BooleanField(default=False)
     def __str__(self):
         return self.name  
 

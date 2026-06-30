@@ -20,6 +20,8 @@ class _LogInState extends State<LogInPage> {
   bool rememberMe = false;
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -27,8 +29,8 @@ class _LogInState extends State<LogInPage> {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Container(
-          height: double.infinity,
-          width: double.infinity,
+          height: height,
+          width: width,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -44,8 +46,8 @@ class _LogInState extends State<LogInPage> {
           ),
           child: Padding(
             padding: EdgeInsetsGeometry.symmetric(
-              horizontal: 40,
-              vertical: 120,
+              horizontal: width*0.028,
+              vertical: height*0.12,
             ),
             child: SingleChildScrollView(
               child: Column(

@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/screens/home_screen/register/register_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
+import 'package:mobile/auth/providers/auth_providers.dart';
 import 'email_method.dart';
 import 'password_method.dart';
 import 'other_method_sign_in.dart';
+import 'forgot_password.dart';
+import 'sign_in.dart';
 
-class LogInPage extends StatefulWidget {
+class LogInPage extends ConsumerStatefulWidget {
   const LogInPage({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<LogInPage> createState() {
     return _LogInState();
   }
 }
 
-class _LogInState extends State<LogInPage> {
+class _LogInState extends ConsumerState<LogInPage> {
   final username = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
-  bool rememberMe = false;
   @override
   Widget build(BuildContext context) {
+    final rememberProvider = StateProvider<bool>((ref)=>false);
+    final rememberMe = ref.watch(rememberProvider);
+    final authState = ref.watch(authProvider);
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
     return Scaffold(
@@ -46,8 +52,8 @@ class _LogInState extends State<LogInPage> {
           ),
           child: Padding(
             padding: EdgeInsetsGeometry.symmetric(
-              horizontal: width*0.028,
-              vertical: height*0.12,
+              horizontal: width * 0.028,
+              vertical: height * 0.12,
             ),
             child: SingleChildScrollView(
               child: Column(
@@ -61,10 +67,9 @@ class _LogInState extends State<LogInPage> {
 
                   //password
                   passwordMethod(password),
-                  forgotPassword(),
-
+                  forgotPassword(rememberProvider, rememberMe),
                   SizedBox(height: 40),
-                  logIn(context),
+                  logIn(context, authState),
                   SizedBox(height: 10),
                   withEmailSignIn(context),
                   otherMethodsSignUp(),
@@ -77,82 +82,25 @@ class _LogInState extends State<LogInPage> {
     );
   }
 
-  Text signInText() {
-    return Text(
-      "Sign in",
-      style: TextStyle(
-        fontFamily: 'OpenSams',
-        fontSize: 30,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
-  Row withEmailSignIn(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("Don't have an account", style: TextStyle(color: Colors.white)),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CounterPage()),
-            );
-          },
-          child: Text(
-            "Sign Up",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ],
-    );
-  }
-
-  ElevatedButton logIn(BuildContext context) {
+  ElevatedButton logIn(BuildContext context, AsyncValue<String?> authState) {
     return ElevatedButton(
-      onPressed: () {},
-      child: SizedBox(
-        width: MediaQuery.sizeOf(context).width,
-        child: Text(
-          "LOGIN",
-          style: TextStyle(color: Colors.blue),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  Row forgotPassword() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Checkbox(
-              value: rememberMe,
-              activeColor: Colors.white,
-              // checkColor: Colors.white,
-              side: BorderSide(color: Colors.white),
-              onChanged: (val) {
-                setState(() {
-                  rememberMe = val!;
-                });
-              },
+      onPressed: authState.isLoading
+          ? null
+          : () async {
+              await ref
+                  .read(authProvider.notifier)
+                  .login(email.text, password.text);
+            },
+      child: authState.isLoading
+          ? Center(child: CircularProgressIndicator.adaptive())
+          : SizedBox(
+              width: MediaQuery.sizeOf(context).width,
+              child: Text(
+                "LOGIN",
+                style: TextStyle(color: Colors.blue),
+                textAlign: TextAlign.center,
+              ),
             ),
-            Text("Remember Me", style: TextStyle(color: Colors.white)),
-          ],
-        ),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            "Forgot Password?",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ],
     );
   }
 }

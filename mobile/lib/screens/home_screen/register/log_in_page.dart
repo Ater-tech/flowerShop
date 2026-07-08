@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:mobile/auth/providers/auth_providers.dart';
+import 'package:mobile/screens/home_screen/main_page.dart';
 import 'email_method.dart';
 import 'password_method.dart';
 import 'other_method_sign_in.dart';
@@ -22,12 +23,37 @@ class _LogInState extends ConsumerState<LogInPage> {
   final email = TextEditingController();
   final password = TextEditingController();
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final rememberProvider = StateProvider<bool>((ref)=>false);
+    final rememberProvider = StateProvider<bool>((ref) => false);
     final rememberMe = ref.watch(rememberProvider);
     final authState = ref.watch(authProvider);
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
+
+    ref.listenManual<AsyncValue<String?>>(authProvider, ((previous, next) {
+      next.when(
+        data: (token) {
+          if (token != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MainPage()),
+            );
+          }
+        },
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(error.toString())));
+        },
+        loading: () {},
+      );
+    }));
+
     return Scaffold(
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,

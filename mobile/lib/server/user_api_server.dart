@@ -14,12 +14,13 @@ class UserApiService {
   Future<String?> login(String username, String password) async {
     try {
       final response = await dio.post(
-        ApiEndpoints.loginMain,
-        data: {'email': username, 'password': password},
+        ApiEndpoints.login,
+        data: {'username': username, 'password': password},
       );
       return response.data['access'];
-    } catch (e) {
-      debugPrint("Login error$e");
+    } on DioException catch (e) {
+      debugPrint("Status ${e.response?.statusCode}");
+      debugPrint("Body ${e.response?.data}");
       return null;
     }
   }

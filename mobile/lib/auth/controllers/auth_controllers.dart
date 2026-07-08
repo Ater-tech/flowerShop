@@ -12,14 +12,7 @@ class AuthController extends StateNotifier<AsyncValue<String?>> {
 
     try {
       final token = await api.login(email, password);
-      if(token  != null){
-        state = AsyncValue.data(token);
-      }else{
-        state = AsyncValue.error(
-          "Email yoki parol noto'g'ri",
-          StackTrace.current
-        );
-      }
+      state = AsyncValue.data(token);
     } catch (e, s) {
       state = AsyncValue.error(e, s);
     }

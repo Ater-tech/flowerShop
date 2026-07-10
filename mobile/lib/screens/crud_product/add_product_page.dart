@@ -1,19 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/screens/crud_product/save_flower.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/auth/providers/product_providers.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddProductPage extends StatefulWidget {
+class AddProductPage extends ConsumerStatefulWidget {
   const AddProductPage({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<AddProductPage> createState() {
     return _AddState();
   }
 }
 
-class _AddState extends State<StatefulWidget> {
+class _AddState extends ConsumerState<AddProductPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController shopController = TextEditingController();
@@ -24,6 +25,12 @@ class _AddState extends State<StatefulWidget> {
   bool aviable = false;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
+  late bool isLoading;
+  @override
+  void initState(){
+    isLoading = false;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,7 +110,8 @@ class _AddState extends State<StatefulWidget> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () async {
+                onPressed: isLoading? null : () async {
+
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
@@ -122,9 +130,12 @@ class _AddState extends State<StatefulWidget> {
                     ).showSnackBar(SnackBar(content: Text("CHoose image ...")));
                     return;
                   }
+                  setState(() {
+                    isLoading = true;
+                  });
 
                   try {
-                    await FlowerWriteRepository().saveFlower(
+                    await ref.read(productApiProvider).saveFlower(
                       name: nameController.text,
                       shopName: shopController.text,
                       description: descriptionController.text,
@@ -138,15 +149,25 @@ class _AddState extends State<StatefulWidget> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Successfully done!")),
                     );
-                    Navigator.pop(context);
+                    Navigator.pop(context, true);
                   } catch (e) {
                     if (!context.mounted) return;
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(SnackBar(content: Text("Error $e")));
+                  } finally{
+                    setState(() {
+                      isLoading = false;
+                    });
                   }
                 },
-                child: Text("Save"),
+                child: isLoading
+                ? SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(),
+                )
+                :Text("Save"),
               ),
             ],
           ),

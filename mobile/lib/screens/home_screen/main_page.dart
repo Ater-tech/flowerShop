@@ -1,40 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/models/flower_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/auth/providers/product_providers.dart';
 import 'package:mobile/screens/home_screen/products_list_ui.dart';
-import 'package:mobile/server/flower_api_server.dart';
 import 'package:mobile/screens/crud_product/add_product_page.dart';
 
-class MainPage extends StatefulWidget {
+class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
 
   @override
-  State<MainPage> createState() => _ProductState();
+  ConsumerState<MainPage> createState() => _ProductState();
 }
 
-class _ProductState extends State<MainPage> {
+class _ProductState extends ConsumerState<MainPage> {
   Set<int> favItems = {};
-
   @override
   Widget build(BuildContext context) {
+  final products = ref.watch(productControllerProvider);
     return Scaffold(
-      body: CustomScrollView(
+      body: products.when(
+        data: (list){
+          return
+          CustomScrollView(
         slivers: [
           SliverAppBar.large(
             actions: [
               IconButton(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => AddProductPage()),
                   );
+                  if(result){ref.invalidate(productControllerProvider);} 
                 },
                 icon: Icon(Icons.add_outlined),
               ),
               IconButton(
-                onPressed: () {
-                  listProducts();
-                  setState(() {});
-                },
+                onPressed: () => ref.refresh(productControllerProvider),
                 icon: Icon(Icons.refresh),
               ),
             ],
@@ -49,35 +50,10 @@ class _ProductState extends State<MainPage> {
               ),
             ),
           ),
-          listProducts(),
-        ],
-      ),
-    );
-  }
-
-  FutureBuilder<List<FlowerModel>> listProducts() {
-    return FutureBuilder(
-      future: FlowerApiServer.getData(),
-      builder: (context, AsyncSnapshot<List<FlowerModel>> snap) {
-        if (snap.connectionState == ConnectionState.waiting) {
-          return SliverFillRemaining(
-            child: Center(child: CircularProgressIndicator.adaptive()),
-          );
-        }
-        if (snap.hasError) {
-          return SliverFillRemaining(
-            child: Center(
-              child: Column(
-                children: [Text("Snap error"), Text(snap.error.toString())],
-              ),
-            ),
-          );
-        }
-        final data = snap.data ?? [];
-        return productList(
-          flowerList: data,
-          favItems: favItems,
-          onTap: (id) {
+          productList(
+            flowerList: list, 
+            favItems: favItems, 
+            onTap: (id) {
             setState(() {
               if (favItems.contains(id)) {
                 favItems.remove(id);
@@ -85,9 +61,18 @@ class _ProductState extends State<MainPage> {
                 favItems.add(id);
               }
             });
-          },
-        );
-      },
+          },),
+        ],
+      );
+          }, 
+          error: (e, s) => Center(
+            child: Column(
+              children: [Text("Error"), Text(e.toString())],
+            ),
+          ), 
+          loading: () => Center(child: CircularProgressIndicator.adaptive())
+          )
     );
   }
+
 }

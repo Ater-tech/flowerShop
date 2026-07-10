@@ -23,36 +23,20 @@ class _LogInState extends ConsumerState<LogInPage> {
   final email = TextEditingController();
   final password = TextEditingController();
   @override
-  void initState() {
-    super.initState();
+  void dispose(){
+    username.dispose();
+    email.dispose();
+    password.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final rememberProvider = StateProvider<bool>((ref) => false);
     final rememberMe = ref.watch(rememberProvider);
-    final authState = ref.watch(authProvider);
+    final authState = ref.watch(authControllerProvider);
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
-
-    ref.listenManual<AsyncValue<String?>>(authProvider, ((previous, next) {
-      next.when(
-        data: (token) {
-          if (token != null) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const MainPage()),
-            );
-          }
-        },
-        error: (error, stackTrace) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(error.toString())));
-        },
-        loading: () {},
-      );
-    }));
 
     return Scaffold(
       body: GestureDetector(
@@ -108,14 +92,25 @@ class _LogInState extends ConsumerState<LogInPage> {
     );
   }
 
-  ElevatedButton logIn(BuildContext context, AsyncValue<String?> authState) {
+  ElevatedButton logIn(BuildContext context, AsyncValue<void> authState) {
     return ElevatedButton(
       onPressed: authState.isLoading
           ? null
           : () async {
-              await ref
-                  .read(authProvider.notifier)
+            final success =   await ref
+                  .read(authControllerProvider.notifier)
                   .login(email.text, password.text);
+
+                  if(success){
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context)=>MainPage()));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("User topilmadi"))
+                    );
+                  }
             },
       child: authState.isLoading
           ? Center(child: CircularProgressIndicator.adaptive())

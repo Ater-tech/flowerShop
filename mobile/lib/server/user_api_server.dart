@@ -1,27 +1,25 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile/models/token_model.dart';
+import 'package:mobile/server/api_main_service.dart';
 import 'api_endpoints.dart';
 
 class UserApiService {
-  final Dio dio = Dio(
-    BaseOptions(
-      baseUrl: dotenv.env['FLOWER_URL']!,
-      connectTimeout: Duration(seconds: 10),
-      receiveTimeout: Duration(seconds: 10),
-    ),
-  );
-  Future<String?> login(String username, String password) async {
+  final ApiMainService apiService;
+
+  UserApiService(this.apiService);
+
+  Future<TokenModel?> login(String username, String password) async {
     try {
-      final response = await dio.post(
+      final response = await apiService.dio.post(
         ApiEndpoints.login,
         data: {'username': username, 'password': password},
       );
-      return response.data['access'];
+      return TokenModel.fromJson(response.data);
     } on DioException catch (e) {
       debugPrint("Status ${e.response?.statusCode}");
-      debugPrint("Body ${e.response?.data}");
-      return null;
+      // debugPrint("Body ${e.response?.data}");
+      rethrow;
     }
   }
 }

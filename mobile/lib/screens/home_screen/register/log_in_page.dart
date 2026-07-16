@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
-import 'package:mobile/auth/providers/auth_providers.dart';
-import 'package:mobile/screens/home_screen/main_page.dart';
+import 'package:mobile/auth/controllers/auth_controllers.dart';
+import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
 import 'email_method.dart';
 import 'password_method.dart';
 import 'other_method_sign_in.dart';
@@ -32,12 +31,24 @@ class _LogInState extends ConsumerState<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
-    final rememberProvider = StateProvider<bool>((ref) => false);
-    final rememberMe = ref.watch(rememberProvider);
     final authState = ref.watch(authControllerProvider);
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
 
+    ref.listen<AsyncValue<void>>(authControllerProvider, (previous, next) {
+      next.whenOrNull(
+        error: (error, _) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Xatolik: $error"))
+          );
+        },
+        data: (data) {
+          if(previous is AsyncLoading){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage()));
+          }
+        }
+      );
+    });
     return Scaffold(
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -77,7 +88,7 @@ class _LogInState extends ConsumerState<LogInPage> {
 
                   //password
                   passwordMethod(password),
-                  forgotPassword(rememberProvider, rememberMe),
+                  forgotPassword(ref, Colors.white),
                   SizedBox(height: 40),
                   logIn(context, authState),
                   SizedBox(height: 10),
@@ -97,20 +108,10 @@ class _LogInState extends ConsumerState<LogInPage> {
       onPressed: authState.isLoading
           ? null
           : () async {
-            final success =   await ref
+            await ref
                   .read(authControllerProvider.notifier)
                   .login(email.text, password.text);
-
-                  if(success){
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context)=>MainPage()));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("User topilmadi"))
-                    );
-                  }
+                 
             },
       child: authState.isLoading
           ? Center(child: CircularProgressIndicator.adaptive())

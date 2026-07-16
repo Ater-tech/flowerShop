@@ -22,7 +22,8 @@ class ProductModel(models.Model):
     # shopAsistense = models.ManyToManyField(ShopAsistense)
     price = models.DecimalField(max_digits=12, decimal_places=3)
     aviable = models.BooleanField()
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     is_favourite = models.BooleanField(default=False)
     def __str__(self):
         return self.name  

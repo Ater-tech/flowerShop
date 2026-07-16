@@ -4,6 +4,6 @@ from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
-router.register("flowers", FlowerViewSet)
+router.register(r"flowers", FlowerViewSet, basename = 'flowers')
 
 urlpatterns = router.urls

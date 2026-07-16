@@ -7,7 +7,8 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductModel
         fields = "__all__"
-
+        read_only_fields = ["id", "updated_at", "created_at"]
+        
     def get_image_url(self, obj):
         request = self.context.get("request")
 

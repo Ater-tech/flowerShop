@@ -1,30 +1,57 @@
 import 'package:dio/dio.dart';
-import 'package:mobile/repository/token_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:mobile/storage/token_storage.dart';
 import 'package:mobile/server/api_endpoints.dart';
 
 class AuthReprository {
-  final Dio refreshDio;
+  final Dio api;
   final TokenStorage storage;
 
-  AuthReprository({required this.refreshDio, required this.storage});
+  AuthReprository({required this.api, required this.storage});
 
-  Future<String?> refreshToken() async {
-    final refresh = await storage.getRefreshToken();
-    if (refresh == null) {
-      return null;
-    }
-
+  Future<void> register({
+    required String username,
+    required String password,
+  }) async {
     try {
-      final response = await refreshDio.post(
-        ApiEndpoints.refresh,
-        data: {"refresh": refresh},
+      // final response = 
+      await api.post(
+        ApiEndpoints.register,
+        data: {"username": username, "password": password},
       );
-      final newAccess = response.data["access"];
-      await storage.saveAccessToken(newAccess);
-      return newAccess;
-    } on DioException {
-      await storage.deleteTokens();
-      return null;
+    } on DioException catch(e) {
+      debugPrint("xatolik: repo: ${e.response?.statusCode}");
+      debugPrint("xatolik: repo: ${e.response?.data}");
+      rethrow;
     }
   }
+
+  Future<void> login({
+    required String username,
+    required String password,
+  }) async{
+    try {
+      final response = await api.post(
+        ApiEndpoints.login,
+        data: {"username": username, "password": password},
+      );
+      await storage.saveAccessToken(response.data["access"]);
+      await storage.saveRefreshToken(response.data["refresh"]);
+    } on DioException catch(e){
+      debugPrint("Xatolik: login: $e");
+      rethrow;
+    }    
+  }
+  Future<void> logout({
+    required String username,
+    required String password,
+  }) async{
+    try {      
+      await storage.deleteTokens();
+    } catch(e){
+      debugPrint("Xatolik: login: $e");
+      rethrow;
+    }    
+  }
+
 }

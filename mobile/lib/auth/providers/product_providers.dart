@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/models/flower_model.dart';
 import 'package:mobile/server/flower_api_server.dart';
-import 'auth_providers.dart';
+import 'repo_providers.dart';
+// import '../repositories/product_repository.dart'; // keyin ulanadi
 
 final productApiProvider = Provider<FlowerApiServer>(
   (ref){
@@ -13,3 +14,9 @@ final productControllerProvider = FutureProvider<List<FlowerModel>>(
     return await ref.read(productApiProvider).getData();
   }
 );
+
+
+final productListProvider = FutureProvider<List<FlowerModel>>((ref) async {
+  // keyin repository orqali backenddan olinadi
+  return [];
+});

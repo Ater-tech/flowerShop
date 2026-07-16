@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/auth/providers/repo_providers.dart';
 
-Row forgotPassword(StateProvider remProvider, bool rememberMe) {
+Row forgotPassword(WidgetRef ref, Color color) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
@@ -9,23 +10,21 @@ Row forgotPassword(StateProvider remProvider, bool rememberMe) {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Checkbox(
-            value: rememberMe,
-            activeColor: Colors.white,
-            // checkColor: Colors.white,
-            side: BorderSide(color: Colors.white),
+            checkColor: color,
+            // activeColor: Colors.transparent,
+            fillColor: WidgetStateProperty.all(Colors.transparent),
+            value: ref.watch(rememberMeProvider),            
+            side: WidgetStateBorderSide.resolveWith((states) => BorderSide(color: color)),
             onChanged: (val) {  
-                                         
-              // setState(() {
-              //   rememberMe = val!;
-              // });
+             ref.read(rememberMeProvider.notifier).state = val!;
             },
           ),
-          Text("Remember Me", style: TextStyle(color: Colors.white)),
+          Text("Remember Me", style: TextStyle(color: color)),
         ],
       ),
       TextButton(
         onPressed: () {},
-        child: Text("Forgot Password?", style: TextStyle(color: Colors.white)),
+        child: Text("Forgot Password?", style: TextStyle(color: color)),
       ),
     ],
   );

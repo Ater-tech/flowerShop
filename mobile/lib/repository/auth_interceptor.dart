@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:mobile/repository/auth_reprository.dart';
-import 'package:mobile/repository/token_storage.dart';
+import 'package:mobile/repository/token_repository.dart';
+import 'package:mobile/storage/token_storage.dart';
 
 class AuthInterceptor extends Interceptor {
   AuthInterceptor({required this.storage, required this.reprository, required this.api});
   final TokenStorage storage;
-  final AuthReprository reprository;
+  final TokenRepository reprository;
   final Dio api;
   Completer<String?>? _refreshCompleter;
 
@@ -61,6 +61,22 @@ class AuthInterceptor extends Interceptor {
     _refreshCompleter = null;
     if (newToken == null) {
       return handler.next(err);
+    }
+    return _retry(options, newToken, handler);
+  }
+
+  Future<void> _retry(
+    RequestOptions options,
+    String token,
+    ErrorInterceptorHandler handler,
+  ) async {
+    options.headers["Authorization"] = "Bearer $token";
+    options.extra["retry"] = true;
+    try{
+      final response = await api.fetch(options);
+      handler.resolve(response);
+    } on DioException catch(e){
+      handler.next(e);
     }
   }
 }

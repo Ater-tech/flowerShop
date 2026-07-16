@@ -22,7 +22,7 @@ Text signInText() {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CounterPage()),
+              MaterialPageRoute(builder: (context) => RegisterPage()),
             );
           },
           child: Text(

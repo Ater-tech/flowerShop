@@ -9,7 +9,7 @@ from .serializers import ProductSerializer
 class FlowerViewSet(viewsets.ModelViewSet):
     queryset = ProductModel.objects.all().order_by("created_at")
     serializer_class = ProductSerializer
-    permission_class = [permission.IsAuthenticatedOrReadOnly]
+    permission_class = [permissions.IsAuthenticatedOrReadOnly]
 # def FlowerInfo(request):
 #     items = ProductModel.objects.all()
 #     data = []

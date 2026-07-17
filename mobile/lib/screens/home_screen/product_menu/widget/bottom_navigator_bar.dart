@@ -24,16 +24,16 @@ class HomeBottomNavBar extends ConsumerWidget {
           label: 'Bosh sahifa',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.smart_toy_outlined),
-          label: 'AI yordam',
+          icon: Icon(Icons.message),
+          label: 'Xabarlar',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add),
+          label: 'Sell',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_bag_outlined),
           label: 'Savat',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.credit_card_outlined),
-          label: 'Kartalar',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person_outline),

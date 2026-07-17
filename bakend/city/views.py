@@ -10,7 +10,7 @@ class CityListView(generics.ListAPIView):
     """GET /api/cities/  -- barcha faol shaharlar ro'yxati"""
     queryset = City.objects.filter(is_active=True)
     serializer_class = CitySerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class UserCityPreferenceView(APIView):

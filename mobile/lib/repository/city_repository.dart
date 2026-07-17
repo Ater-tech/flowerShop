@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:mobile/models/city_model/city_model.dart';
 import 'package:mobile/server/api_endpoints.dart';
@@ -26,19 +27,20 @@ class CityRepository {
     }
 
     try {
+      debugPrint("City list chaqirishga urunish");
       final response = await dio.get(
         ApiEndpoints.citiesList);
       if (response.statusCode == 200) {
         final cities = response.data
         .map((e) => CityModel.fromJson(e))
         .toList();
-
         await box.clear();
         await box.addAll(cities);
         return cities;
       }
-    } catch (_) {
+    } catch (e, stack) {
       // backend ishlamasa keshdagi malumot bilan davom etiladi
+        debugPrint("xatolik city listda: $e\n/$stack");
     }
 
     return box.values.toList();
@@ -56,12 +58,15 @@ class CityRepository {
 
   Future<void> sendSelectedCityToBackend(CityModel city) async {
     try {
-      await dio.post(
+      final response = await dio.post(
         ApiEndpoints.userCity,
         data: {'city_id': city.id},
       );
-    } catch (_) {
+      debugPrint("Shahar backendda saqlandi: ${response.statusCode}");
+    } catch (e, stack) {
       // xatolikni loglash yoki qayta urinish logikasi shu yerga
+      debugPrint("Backendga yuborishda xatolik: $e");
+      debugPrint("Stacktrace: $stack");
     }
   }
 }

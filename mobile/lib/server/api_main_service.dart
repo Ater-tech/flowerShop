@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:mobile/repository/auth_interceptor.dart';
 import 'package:mobile/repository/auth_reprository.dart';
+import 'package:mobile/repository/city_repository.dart';
 import 'package:mobile/storage/token_storage.dart';
 import 'package:mobile/repository/user_repository.dart';
 import 'package:mobile/server/api_endpoints.dart';
@@ -16,6 +17,7 @@ class ApiMainService {
   late final TokenRepository tokenRepository;
   late final AuthReprository authReprository;
   late final UserRepository userReprository;
+  late final CityRepository cityReprository;
 
   ApiMainService({required this.storage}) {
   _initRepositories();
@@ -26,6 +28,7 @@ class ApiMainService {
     tokenRepository = TokenRepository(refreshDio: refreshDio, storage: storage);
     authReprository = AuthReprository(api: dio, storage: storage);
     userReprository = UserRepository(api: dio, storage: storage);
+    cityReprository = CityRepository(dio: dio, storage: storage);
 }
     void _initInterceptors(){
       dio.interceptors.add(

@@ -31,7 +31,7 @@ class CityRepository {
       final response = await dio.get(
         ApiEndpoints.citiesList);
       if (response.statusCode == 200) {
-        final cities = response.data
+        final cities = (response.data as List)
         .map((e) => CityModel.fromJson(e))
         .toList();
         await box.clear();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/auth/providers/bottom_nav_provider.dart';
-
+import 'package:mobile/screens/crud_product/add_product_page.dart';
 class HomeBottomNavBar extends ConsumerWidget {
   const HomeBottomNavBar({super.key});
 
@@ -11,8 +11,21 @@ class HomeBottomNavBar extends ConsumerWidget {
 
     return BottomNavigationBar(
       currentIndex: currentIndex,
-      onTap: (index) =>
-          ref.read(bottomNavIndexProvider.notifier).state = index,
+      onTap: (index) {
+        // Agar "Sell" (index 2) bosilsa - yangi sahifaga o'tamiz,
+        // lekin currentIndex ni o'zgartirmaymiz
+        if (index == 2) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) {
+              // return const CreateListingPage();
+              return const AddProductPage();
+              }),
+          );
+          return;
+        }
+
+        ref.read(bottomNavIndexProvider.notifier).state = index;
+      },
       type: BottomNavigationBarType.fixed,
       selectedItemColor: const Color(0xFF6C3CE9),
       unselectedItemColor: Colors.black54,

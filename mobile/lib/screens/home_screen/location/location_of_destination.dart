@@ -112,9 +112,10 @@ class _CityList extends ConsumerWidget {
         final isSelected = selectedCity?.id == city.id;
 
         return InkWell(
-          onTap: () {
-            ref.read(selectedCityProvider.notifier).selectCity(city);
-            Navigator.of(context).pop(city);
+          onTap: () async{
+            // ref.read(selectedCityProvider.notifier).selectCity(city);
+            await ref.read(selectedCityProvider.notifier).selectCity(city);
+            if(context.mounted){Navigator.of(context).pop(city);}
           },
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 14),

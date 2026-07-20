@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
-TextFormField emailMethod(TextEditingController email) {
-  return TextFormField(
+class EmailMethod extends StatelessWidget{
+  final TextEditingController email;
+  const EmailMethod({super.key, required this.email});
+
+  @override
+  Widget build(BuildContext context){
+    return  TextFormField(
     controller: email,
     keyboardType: TextInputType.emailAddress,
     decoration: InputDecoration(
@@ -20,4 +25,5 @@ TextFormField emailMethod(TextEditingController email) {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
     ),
   );
+  }
 }

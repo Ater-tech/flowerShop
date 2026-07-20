@@ -1,19 +1,7 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:mobile/screens/home_screen/register/register_page.dart';
 
-Text signInText() {
-    return Text(
-      "Sign in",
-      style: TextStyle(
-        fontFamily: 'OpenSams',
-        fontSize: 30,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
-  Row withEmailSignIn(BuildContext context) {
+Row withEmailSignIn(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

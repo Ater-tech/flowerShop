@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/auth/controllers/auth_controllers.dart';
 import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
-import 'email_method.dart';
-import 'password_method.dart';
-import 'other_method_sign_in.dart';
-import 'forgot_password.dart';
-import 'sign_in.dart';
+import 'methods/email_method.dart';
+import 'methods/password_method.dart';
+import 'methods/other_method_sign_in.dart';
+import 'methods/forgot_password.dart';
+import 'methods/sign_in.dart';
+import 'methods/with_email_sign_in.dart';
 
 class LogInPage extends ConsumerStatefulWidget {
   const LogInPage({super.key});
@@ -80,10 +81,10 @@ class _LogInState extends ConsumerState<LogInPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  signInText(),
+                  SignIn(),
                   SizedBox(height: 30),
                   //email
-                  emailMethod(email),
+                  EmailMethod(email: email),
                   SizedBox(height: 10),
 
                   //password

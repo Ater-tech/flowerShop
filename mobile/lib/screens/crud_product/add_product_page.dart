@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/auth/providers/product_providers.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -37,10 +38,8 @@ class _AddState extends ConsumerState<AddProductPage> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+          child: ListView(            
             children: [
               TextFormField(
                 controller: nameController,
@@ -80,13 +79,13 @@ class _AddState extends ConsumerState<AddProductPage> {
                 title: Text(
                   created == null
                       ? "Please  choose the date"
-                      : "${created!.year}-${created!.month}-${created!.day}",
-                ),
+                      : DateFormat('yyyy-MM-dd').format(created!),
+                ),  
                 trailing: Icon(Icons.calendar_today),
                 onTap: () async {
                   final pickedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: created ?? DateTime.now(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                   );

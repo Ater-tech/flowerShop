@@ -67,7 +67,7 @@ class _ProductCard extends StatelessWidget {
         children: [
           Expanded(
             child: Image.network(
-              product.image,
+              product.image??"assets/photos/no_image.jpg",
               fit: BoxFit.cover,
               width: double.infinity,
               errorBuilder: (_, _, _) => Container(color: Colors.black12),
@@ -79,14 +79,14 @@ class _ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(                  
-                  product.name,
+                  product.name??"No name",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 13),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "${product.price} so'm",
+                  "${product.price??"No price"} so'm",
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,

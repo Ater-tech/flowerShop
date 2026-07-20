@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:mobile/auth/providers/wallet_provider.dart';
 
-class WalletBalanceCard extends ConsumerWidget {
+class AIHelperCard extends ConsumerWidget {
   final VoidCallback? onTap;
 
-  const WalletBalanceCard({super.key, this.onTap});
+  const AIHelperCard({super.key, this.onTap});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isVisible = ref.watch(isBalanceVisibleProvider);
-    final balance = ref.watch(walletBalanceProvider);
-
-    final formatter = NumberFormat('#,##0.00', 'uz');
-    final balanceText =
-        isVisible ? "${formatter.format(balance)} so'm" : '••• ••• so\'m';
-
+  Widget build(BuildContext context, WidgetRef ref) {     
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: InkWell(
@@ -42,9 +33,9 @@ class WalletBalanceCard extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
-                  Icons.account_balance_wallet_outlined,
+                  Icons.smart_toy,
                   color: Colors.white,
-                  size: 20,
+                  size: 34,
                 ),
               ),
               const SizedBox(width: 12),
@@ -54,7 +45,7 @@ class WalletBalanceCard extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      balanceText,
+                      "AI yordamchidan foydalaning",
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
@@ -63,7 +54,7 @@ class WalletBalanceCard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      "Hamyondagi mablag'",
+                      "Soting yoki sotib oling",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black.withValues(alpha: .5),
@@ -71,24 +62,7 @@ class WalletBalanceCard extends ConsumerWidget {
                     ),
                   ],
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  ref.read(isBalanceVisibleProvider.notifier).state =
-                      !isVisible;
-                },
-                borderRadius: BorderRadius.circular(20),
-                child: Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Icon(
-                    isVisible
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    color: Colors.black54,
-                    size: 20,
-                  ),
-                ),
-              ),
+              ),              
             ],
           ),
         ),

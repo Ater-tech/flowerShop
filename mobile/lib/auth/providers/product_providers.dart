@@ -14,8 +14,6 @@ final productControllerProvider = FutureProvider<List<FlowerModel>>(
     return await ref.read(productApiProvider).getData();
   }
 );
-
-
 final productListProvider = FutureProvider<List<FlowerModel>>((ref) async {
   // keyin repository orqali backenddan olinadi
   return [];

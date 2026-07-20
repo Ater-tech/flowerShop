@@ -1,13 +1,13 @@
 class FlowerModel {
-  String name;
-  String shopName;
-  String image;
-  String description;
-  String location;
-  double price;
-  bool aviable;
-  DateTime created;
-  bool fav;
+  String? name;
+  String? shopName;
+  String? image;
+  String? description;
+  String? location;
+  double? price;
+  bool? aviable;
+  DateTime? created;
+  bool? fav;
   FlowerModel({
     required this.name,
     required this.shopName,

@@ -35,8 +35,8 @@ class ApiMainService {
       LogInterceptor(
         requestBody: true,
         requestHeader: true,
-        responseBody: false,
-        responseHeader: false,
+        responseBody: true,
+        responseHeader: true,
       ),
     );
     dio.interceptors.add(

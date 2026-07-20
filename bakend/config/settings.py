@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'products',
     'users',
     'city',
+    'banners',
     'rest_framework',
     'rest_framework_simplejwt',
 

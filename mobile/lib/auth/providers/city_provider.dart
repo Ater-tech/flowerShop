@@ -1,15 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:mobile/auth/providers/repo_providers.dart';
 import 'package:mobile/models/city_model/city_model.dart';
-import 'package:mobile/repository/city_repository.dart';
 import 'package:mobile/server/location_service.dart';
-import 'package:mobile/storage/token_storage.dart';
-
-final cityRepositoryProvider = Provider((ref) => CityRepository(dio: Dio(), storage: TokenStorage()));
 
 final cityListProvider = FutureProvider<List<CityModel>>((ref) {
-  return ref.watch(cityRepositoryProvider).fetchCities();
+  return ref.watch(cityRepositoryProvider).fetchCities(forceRefresh: true);
 });
 
 final searchQueryProvider = StateProvider<String>((ref) => '');

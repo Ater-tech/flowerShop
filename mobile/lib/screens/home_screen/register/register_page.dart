@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:mobile/auth/controllers/auth_controllers.dart';
-import 'package:mobile/screens/home_screen/register/email_method.dart';
-import 'package:mobile/screens/home_screen/register/forgot_password.dart';
+import 'package:mobile/screens/home_screen/register/methods/email_method.dart';
+import 'package:mobile/screens/home_screen/register/methods/forgot_password.dart';
 import 'package:mobile/screens/home_screen/register/log_in_page.dart';
-import 'package:mobile/screens/home_screen/register/name_method.dart';
-import 'package:mobile/screens/home_screen/register/password_method.dart';
-import 'package:mobile/screens/home_screen/register/phone_number_method.dart';
+import 'package:mobile/screens/home_screen/register/methods/name_method.dart';
+import 'package:mobile/screens/home_screen/register/methods/password_method.dart';
+import 'package:mobile/screens/home_screen/register/methods/phone_number_method.dart';
 import 'package:mobile/utils/responsive.dart';
 
 final counterProvider = StateProvider<int>((ref) => 0);
@@ -77,7 +77,7 @@ class _RegisterState extends ConsumerState<RegisterPage> {
               SizedBox(height: height*0.01,),
               nameMethod(userNameController, "User Name"),
               SizedBox(height: height*0.01,),
-              emailMethod(eMailController),
+              EmailMethod(email: eMailController),
               SizedBox(height: height*0.01,),
               phoneNumberMethod(phoneNumberController),
               SizedBox(height: height*0.01,),

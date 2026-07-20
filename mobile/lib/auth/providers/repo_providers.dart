@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:mobile/repository/auth_reprository.dart';
+import 'package:mobile/repository/city_repository.dart';
 import 'package:mobile/repository/token_repository.dart';
 import 'package:mobile/storage/token_storage.dart';
 import 'package:mobile/repository/user_repository.dart';
@@ -21,4 +22,8 @@ final authReprositoryProvider = Provider<AuthReprository>(
 
 final userRepositoryProvider = Provider<UserRepository>(
   (ref) => ref.watch(apiProvider).userReprository,
+);
+
+final cityRepositoryProvider = Provider<CityRepository>(
+  (ref)=> ref.watch(apiProvider).cityReprository,
 );

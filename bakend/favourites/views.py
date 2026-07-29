@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from .models import Favourite
 from .serializers import FavouriteSerializer
-
+from rest_framework.decorators import action
 
 class FavouriteViewSet(viewsets.ModelViewSet):
     serializer_class = FavouriteSerializer

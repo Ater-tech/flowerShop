@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mobile/models/flower_model.dart';
+import 'package:mobile/models/product_model.dart';
 import 'api_endpoints.dart';
 import 'api_main_service.dart';
 
@@ -12,10 +12,10 @@ class FlowerApiServer {
   FlowerApiServer(this.service);
 
   // getData()
-  Future<List<FlowerModel>> getData() async {
+  Future<List<ProductModel>> getData() async {
     try {
       Response resp = await service.dio.get(ApiEndpoints.flowers);
-      return (resp.data as List).map((e) => FlowerModel.fromJSON(e)).toList();
+      return (resp.data as List).map((e) => ProductModel.fromJson(e)).toList();
     } on DioException catch (e) {
       throw Exception("FLower status: $e.response?.statusCode");
     }
@@ -30,8 +30,9 @@ class FlowerApiServer {
     required double price,
     required bool aviable,
     required File image,
+    required bool isFav,
   }) async {
-    debugPrint("chaqirildi");
+    debugPrint("save_flower()chaqirildi");
     try {
       final formData = FormData.fromMap({
         'name': name,
@@ -42,6 +43,7 @@ class FlowerApiServer {
         // 'shopAsistense': [],
         'price': price,
         'aviable': aviable,
+        'is_favourite': isFav,
       });
       await service.dio.post(ApiEndpoints.flowers, data: formData);
     } on DioException catch (e) {

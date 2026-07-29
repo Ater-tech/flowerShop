@@ -9,12 +9,16 @@ class AuthController extends StateNotifier<AsyncValue<void>> {
 
   Future<void> login(
     String username, 
-    String password) async {
+    String password, 
+    bool rememberMe,
+    ) async {
     
     state = const AsyncValue.loading();
     try {
-      await _repository.login(username: username, password: password);
+      await _repository.login(username: username, password: password, rememberMe: rememberMe);
+      
       state = const AsyncValue.data(null);
+
     } catch (e, s) {
       state = AsyncValue.error(e, s);
     }

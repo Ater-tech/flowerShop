@@ -12,6 +12,13 @@ class CityModel extends HiveObject {
   final String name;
 
   CityModel({required this.id, required this.name});
+  
+  CityModel copyWith({int? id, String? name}) {
+    return CityModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 
   factory CityModel.fromJson(Map<String, dynamic> json) => CityModel(
         id: json['id'] as int,

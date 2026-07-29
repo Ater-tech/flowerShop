@@ -19,7 +19,6 @@ class _SplashState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controllerLottie;
   static const double _slowMotionFactor = 2.5;
-
   @override
   void initState() {
     super.initState();

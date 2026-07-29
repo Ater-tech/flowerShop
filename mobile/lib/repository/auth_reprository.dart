@@ -29,6 +29,7 @@ class AuthReprository {
   Future<void> login({
     required String username,
     required String password,
+    required bool rememberMe,
   }) async{
     try {
       final response = await api.post(
@@ -37,6 +38,7 @@ class AuthReprository {
       );
       await storage.saveAccessToken(response.data["access"]);
       await storage.saveRefreshToken(response.data["refresh"]);
+      await storage.saveRememberMe(rememberMe);
     } on DioException catch(e){
       debugPrint("Xatolik: login: $e");
       rethrow;
@@ -47,11 +49,29 @@ class AuthReprository {
     required String password,
   }) async{
     try {      
-      await storage.deleteTokens();
+      await storage.deleteTokensAndRememberMe();
     } catch(e){
       debugPrint("Xatolik: login: $e");
       rethrow;
     }    
   }
+  Future<bool> shouldAutoLogin() async {
+  final rememberMe = await storage.getRememberMe();
+  if (!rememberMe) return false;
 
+  final refreshToken = await storage.getRefreshToken();
+  if (refreshToken == null) return false;
+
+  try {
+    final response = await api.post(ApiEndpoints.refresh, data: {
+      'refresh': refreshToken,
+    });
+    final newAccess = response.data['access'] as String;
+    await storage.saveAccessToken(newAccess);
+    return true;
+  } catch (_) {
+    await storage.deleteTokensAndRememberMe();
+    return false;
+  }
+}
 }

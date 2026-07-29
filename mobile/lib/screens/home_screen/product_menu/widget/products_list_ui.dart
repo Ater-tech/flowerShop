@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/auth/providers/product_providers.dart';
-import 'package:mobile/models/flower_model.dart';
+import 'package:mobile/screens/home_screen/product_cart/card_product.dart';
 
 class ProductGridList extends ConsumerWidget {
   const ProductGridList({super.key});
@@ -28,7 +28,7 @@ class ProductGridList extends ConsumerWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final product = products[index];
-                return _ProductCard(product: product);
+                return ProductCard(product: product);
               },
               childCount: products.length,
             ),
@@ -48,55 +48,3 @@ class ProductGridList extends ConsumerWidget {
   }
 }
 
-class _ProductCard extends StatelessWidget {
-  final FlowerModel product; // FlowerModel
-
-  const _ProductCard({required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.black.withValues(alpha: .06)),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Image.network(
-              product.image??"assets/photos/no_image.jpg",
-              fit: BoxFit.cover,
-              width: double.infinity,
-              errorBuilder: (_, _, _) => Container(color: Colors.black12),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(                  
-                  product.name??"No name",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 13),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  "${product.price??"No price"} so'm",
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

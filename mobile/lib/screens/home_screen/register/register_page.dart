@@ -83,7 +83,7 @@ class _RegisterState extends ConsumerState<RegisterPage> {
               SizedBox(height: height*0.01,),
               passwordMethod(passwordController),
               SizedBox(height: height*0.014,),
-              forgotPassword(ref, Colors.black),
+              ForgotPassword(color: Colors.black),
               SizedBox(height: height*0.014,),
               createAccount(authController, context),
             ],

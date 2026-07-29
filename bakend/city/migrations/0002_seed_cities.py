@@ -1,5 +1,5 @@
 from django.db import migrations
-
+41504872160042
 
 CITIES = [
     'Toshkent',

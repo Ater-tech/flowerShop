@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/auth/controllers/auth_controllers.dart';
 import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
+import 'package:mobile/screens/home_screen/register/methods/log_in_button.dart';
+import 'package:mobile/screens/home_screen/register/methods/remember_me_method.dart';
 import 'methods/email_method.dart';
 import 'methods/password_method.dart';
 import 'methods/other_method_sign_in.dart';
@@ -77,53 +79,31 @@ class _LogInState extends ConsumerState<LogInPage> {
               horizontal: width * 0.028,
               vertical: height * 0.12,
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SignIn(),
-                  SizedBox(height: 30),
-                  //email
-                  EmailMethod(email: email),
-                  SizedBox(height: 10),
-
-                  //password
-                  passwordMethod(password),
-                  forgotPassword(ref, Colors.white),
-                  SizedBox(height: 40),
-                  logIn(context, authState),
-                  SizedBox(height: 10),
-                  withEmailSignIn(context),
-                  otherMethodsSignUp(),
-                ],
-              ),
+            child: ListView(
+              children: [
+                SignIn(),
+                SizedBox(height: 30),
+                //email
+                EmailMethod(email: email),
+                SizedBox(height: 10),
+                //password
+                passwordMethod(password),
+                Row(
+                  children: [
+                    RememberMeMethod(color: Colors.white),
+                    ForgotPassword(color: Colors.white),
+                  ],
+                ),
+                SizedBox(height: 40),
+                LogInButton(authState:authState, email: email, password: password),
+                SizedBox(height: 10),
+                withEmailSignIn(context),
+                otherMethodsSignUp(),
+              ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  ElevatedButton logIn(BuildContext context, AsyncValue<void> authState) {
-    return ElevatedButton(
-      onPressed: authState.isLoading
-          ? null
-          : () async {
-            await ref
-                  .read(authControllerProvider.notifier)
-                  .login(email.text, password.text);
-                 
-            },
-      child: authState.isLoading
-          ? Center(child: CircularProgressIndicator.adaptive())
-          : SizedBox(
-              width: MediaQuery.sizeOf(context).width,
-              child: Text(
-                "LOGIN",
-                style: TextStyle(color: Colors.blue),
-                textAlign: TextAlign.center,
-              ),
-            ),
     );
   }
 }

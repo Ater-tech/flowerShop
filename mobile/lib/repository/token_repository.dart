@@ -27,7 +27,7 @@ class TokenRepository {
       await storage.saveAccessToken(newAccess);
       return newAccess;
     } on DioException {
-      await storage.deleteTokens();
+      await storage.deleteTokensAndRememberMe();
       return null;
     }
   }

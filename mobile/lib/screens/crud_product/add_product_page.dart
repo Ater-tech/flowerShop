@@ -142,6 +142,7 @@ class _AddState extends ConsumerState<AddProductPage> {
                       image: _selectedImage!,
                       location: locationController.text,
                       price: double.parse(priceConrtoller.text),
+                      isFav: false,
                     );
 
                     if (!context.mounted) return;

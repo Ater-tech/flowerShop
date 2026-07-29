@@ -5,7 +5,7 @@ class FlowerModel {
   String description;
   String location;
   double price;
-  bool aviable;
+  bool available;
   DateTime created;
   bool fav;
   FlowerModel({
@@ -15,7 +15,7 @@ class FlowerModel {
     required this.description,
     required this.location,
     required this.price,
-    required this.aviable,
+    required this.available,
     required this.created,
     required this.fav,
   });
@@ -28,7 +28,7 @@ class FlowerModel {
       description: data['description'],
       location: data['location'],
       price: double.parse(data['price']),
-      aviable: data['aviable'],
+      available: data['available'],
       // aviable: bool.parse(data['aviable']),
       created: DateTime.parse(data['created']),
       fav: data['is_favourite'],

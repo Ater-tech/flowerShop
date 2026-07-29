@@ -1,30 +1,41 @@
 from django.db import models
-
-class ShopAsistense(models.Model):
-    # id = models.BigAutoField(primary_key=True)
-    firstname = models.CharField(max_length=50)
-    surname = models.CharField(max_length=50)
-    phone_number = models.DecimalField(max_digits=7, decimal_places=0)
-    photo = models.ImageField(upload_to="asistenses/")
-    reg_date = models.DateTimeField(auto_now_add=True)
-    info = models.TextField(max_length = 1500)
-    
-    def __str__(self):
-        return self.firstname
-    
+from seller.models import Seller 
+from city.models import City
+ 
 class ProductModel(models.Model):
     # id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=50, help_text= "Enter the name of the flower", default="No named")
-    shop_name = models.CharField(max_length=50)
+    # shop_name = models.CharField(max_length=50)
     image = models.ImageField(upload_to="images/")
     description = models.TextField(max_length=1500)
-    location = models.TextField(max_length=50)
-    # shopAsistense = models.ManyToManyField(ShopAsistense)
-    price = models.DecimalField(max_digits=12, decimal_places=3)
-    aviable = models.BooleanField()
+    # location = models.TextField(max_length=50)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, related_name="flowers")
+    available = models.BooleanField()
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_favourite = models.BooleanField(default=False)
+    # is_favourite = models.BooleanField(default=False)
+    
+    price = models.DecimalField(max_digits=12, decimal_places=3)
+    old_price = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    discount_percent = models.PositiveSmallIntegerField(default=0)
+    
+    seller = models.ForeignKey(
+        Seller, on_delete=models.CASCADE, related_name="flowers"
+    )
+    
+    rating_avg = models.DecimalField(
+        max_digits=3, decimal_places=2, default=0
+    )  # 4.5, 4.6 
+    review_count = models.PositiveIntegerField(default=0)
+    sold_count = models.PositiveIntegerField(default=0)  
+    view_count = models.PositiveIntegerField(default=0)
+    is_original = models.BooleanField(default=False)  # 
+    
+    class Meta:
+        ordering = ["-created_at"]
+        
     def __str__(self):
         return self.name  
-

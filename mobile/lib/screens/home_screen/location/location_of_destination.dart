@@ -101,7 +101,7 @@ class _CityList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (cities.isEmpty) {
-      return const Center(child: Text('Shahar topilmadi'));
+      return const Center(child: Text('Shaharlar topilmadi'));
     }
 
     return ListView.builder(

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/auth/providers/banner_provider.dart';
 import 'package:mobile/auth/providers/product_providers.dart';
 import 'package:mobile/screens/home_screen/product_menu/widget/on_refresh.dart';
+import 'package:mobile/screens/home_screen/search/search_page.dart';
 import 'widget/location_now.dart';
 import 'widget/home_search_field.dart';
 import 'widget/ai_helper_card.dart';
@@ -39,7 +41,7 @@ class HomePage extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: HomeSearchField(
                     onTap: () {
-                      // qidiruv sahifasiga o'tish
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchPage()));
                     },
                     onFavoriteTap: () {
                       // sevimlilar sahifasiga o'tish
@@ -80,6 +82,8 @@ class HomePage extends ConsumerWidget {
   SchedulerBinding.instance.addPostFrameCallback((_) async {
     ref.invalidate(productControllerProvider);
     await ref.read(productControllerProvider.future);
+    ref.invalidate(bannerListProvider);
+    await ref.read(bannerListProvider.future);
     completer.complete();
   });
   return completer.future;

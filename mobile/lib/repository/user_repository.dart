@@ -16,7 +16,7 @@ class UserRepository {
   Future<bool> deleteAccount() async {
     try {
       await api.delete(ApiEndpoints.deleteAccount);
-      await storage.deleteTokens();
+      await storage.deleteTokensAndRememberMe();
       return true;
     } on DioException catch(e){
       debugPrint("Cannot Delete error $e");

@@ -8,12 +8,14 @@ class ProductCard extends StatelessWidget {
   final ProductModel product;
   final VoidCallback? onTap;
   final VoidCallback? onFavouriteTap;
+  final bool isFavouriteLoading;
 
   const ProductCard({
     super.key,
     required this.product,
     this.onTap,
     this.onFavouriteTap,
+    this.isFavouriteLoading = false,
   });
 
   @override
@@ -71,7 +73,10 @@ class ProductCard extends StatelessWidget {
                     children: [
                       Text(
                         "${product.price.toStringAsFixed(0)} so'm",
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       if (product.discountPercent > 0) ...[
                         const SizedBox(width: 6),
@@ -89,7 +94,10 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                   const SizedBox(height: 4),
-                  RatingRow(rating: product.ratingAvg, reviewCount: product.reviewCount),
+                  RatingRow(
+                    rating: product.ratingAvg,
+                    reviewCount: product.reviewCount,
+                  ),
                 ],
               ),
             ),
@@ -112,7 +120,10 @@ class _FavouriteButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(5),
-        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
         child: Icon(
           isFavourited ? Icons.favorite : Icons.favorite_border,
           size: 16,

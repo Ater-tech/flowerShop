@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mobile/error_handler/failure.dart';
+import 'package:mobile/server/api_endpoints.dart';
 import '../models/product_model.dart';
 import '../models/product_models/product_query.dart';
 import '../repository/product_repository.dart';
@@ -15,12 +16,13 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<Result<List<ProductModel>>> fetchProducts(ProductQuery query) async {
     try {
       final response = await dio.get(
-        "/api/flowers/",
+        ApiEndpoints.flowers,
         queryParameters: query.toQueryParams(),
       );
 
       final results = response.data is Map
-          ? response.data["results"] as List
+          ? response.data["results"]
+                as List //pagnitation bo'lsa
           : response.data as List;
 
       final products = results

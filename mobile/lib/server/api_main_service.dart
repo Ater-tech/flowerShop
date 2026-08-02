@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:mobile/repository/auth_interceptor.dart';
 import 'package:mobile/repository/auth_reprository.dart';
 import 'package:mobile/repository/city_repository.dart';
+import 'package:mobile/repository/product_repository.dart';
 import 'package:mobile/storage/token_storage.dart';
 import 'package:mobile/repository/user_repository.dart';
 import 'package:mobile/server/api_endpoints.dart';
@@ -18,20 +19,23 @@ class ApiMainService {
   late final AuthReprository authReprository;
   late final UserRepository userReprository;
   late final CityRepository cityReprository;
+  late final ProductRepository productRepository;
 
   ApiMainService({required this.storage}) {
-  _initRepositories();
-  _initInterceptors();
+    _initRepositories();
+    _initInterceptors();
   }
 
-    void _initRepositories(){
+  void _initRepositories() {
     tokenRepository = TokenRepository(refreshDio: refreshDio, storage: storage);
     authReprository = AuthReprository(api: dio, storage: storage);
     userReprository = UserRepository(api: dio, storage: storage);
     cityReprository = CityRepository(dio: dio, storage: storage);
-}
-    void _initInterceptors(){
-      dio.interceptors.add(
+    productRepository = ProductRepository(dio: dio, storage: storage);
+  }
+
+  void _initInterceptors() {
+    dio.interceptors.add(
       LogInterceptor(
         requestBody: true,
         requestHeader: true,
@@ -41,7 +45,8 @@ class ApiMainService {
     );
     dio.interceptors.add(
       AuthInterceptor(storage: storage, reprository: tokenRepository, api: dio),
-    );}
+    );
+  }
 }
 
 Dio _createDio() => Dio(

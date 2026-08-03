@@ -39,3 +39,25 @@ class ProductModel(models.Model):
         
     def __str__(self):
         return self.name  
+
+# products/models.py yoki alohida config app
+class ProductPricingConfig(models.Model):
+    """
+    Faqat bitta qator bo'lishi kerak (singleton pattern).
+    Admin panel orqali narxlar va limitlar shu yerdan o'zgartiriladi.
+    """
+    free_product_limit = models.PositiveIntegerField(default=3)
+    price_per_extra_product = models.PositiveIntegerField(default=5000)
+
+    def save(self, *args, **kwargs):
+        self.pk = 1  # har doim bitta qatorgina bo'lishini majburlaydi
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_solo(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def __str__(self):
+        return "Mahsulot narxlash sozlamalari"
+    

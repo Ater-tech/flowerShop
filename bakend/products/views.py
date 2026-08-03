@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse, response
-from .models import ProductModel
+from .models import ProductModel, ProductPricingConfig
 from .serializers import ProductSerializer
 from favourites.models import Favourite
-
+from .exceptions import ProductLimitReached
 from rest_framework import viewsets, permissions, filters
 from django.db.models import Exists, OuterRef
 from django_filters.rest_framework import DjangoFilterBackend
@@ -18,9 +18,9 @@ class FlowerViewSet(viewsets.ModelViewSet):
     filterset_fields = ["city", "seller"]
 
     def perform_create(self, serializer):
-        seller = self.request.user.seller  # User -> Seller OneToOne/ForeignKey deb faraz qilyapman
+        seller = self.request.user.seller_profile  # User -> Seller OneToOne/ForeignKey
         serializer.save(seller=seller)
-        
+
     def get_queryset(self):
         qs = ProductModel.objects.select_related("seller", "city")
         

@@ -28,7 +28,7 @@ class FlowerApiServer {
     required String description,
     required String location,
     required double price,
-    required bool aviable,
+    required bool available,
     required File image,
     required bool isFav,
   }) async {
@@ -36,13 +36,13 @@ class FlowerApiServer {
     try {
       final formData = FormData.fromMap({
         'name': name,
-        'shop_name': shopName,
+        // 'shop_name': shopName,
         'image': await MultipartFile.fromFile(image.path),
         'description': description,
-        'location': location,
+        'city': cityId,
         // 'shopAsistense': [],
         'price': price,
-        'aviable': aviable,
+        'available': available,
         'is_favourite': isFav,
       });
       await service.dio.post(ApiEndpoints.flowers, data: formData);

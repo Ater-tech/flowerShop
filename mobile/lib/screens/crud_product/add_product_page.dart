@@ -142,7 +142,7 @@ class _AddState extends ConsumerState<AddProductPage> {
                                 name: nameController.text,
                                 shopName: shopController.text,
                                 description: descriptionController.text,
-                                aviable: aviable,
+                                available: available,
                                 image: _selectedImage!,
                                 location: locationController.text,
                                 price: double.parse(priceConrtoller.text),

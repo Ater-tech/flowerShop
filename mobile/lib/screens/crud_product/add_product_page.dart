@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/auth/providers/product_providers.dart';
+import 'package:mobile/providers/product_providers.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProductPage extends ConsumerStatefulWidget {
@@ -28,10 +28,11 @@ class _AddState extends ConsumerState<AddProductPage> {
   final ImagePicker _picker = ImagePicker();
   late bool isLoading;
   @override
-  void initState(){
+  void initState() {
     isLoading = false;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +40,7 @@ class _AddState extends ConsumerState<AddProductPage> {
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-          child: ListView(            
+          child: ListView(
             children: [
               TextFormField(
                 controller: nameController,
@@ -80,7 +81,7 @@ class _AddState extends ConsumerState<AddProductPage> {
                   created == null
                       ? "Please  choose the date"
                       : DateFormat('yyyy-MM-dd').format(created!),
-                ),  
+                ),
                 trailing: Icon(Icons.calendar_today),
                 onTap: () async {
                   final pickedDate = await showDatePicker(
@@ -109,65 +110,68 @@ class _AddState extends ConsumerState<AddProductPage> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: isLoading? null : () async {
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        if (!_formKey.currentState!.validate()) {
+                          return;
+                        }
+                        // if (_selectedImage == null) {
+                        //   return;
+                        // }
+                        if (created == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Choose date ...")),
+                          );
+                          return;
+                        }
+                        if (_selectedImage == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("CHoose image ...")),
+                          );
+                          return;
+                        }
+                        setState(() {
+                          isLoading = true;
+                        });
 
-                  if (!_formKey.currentState!.validate()) {
-                    return;
-                  }
-                  // if (_selectedImage == null) {
-                  //   return;
-                  // }
-                  if (created == null) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text("Choose date ...")));
-                    return;
-                  }
-                  if (_selectedImage == null) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text("CHoose image ...")));
-                    return;
-                  }
-                  setState(() {
-                    isLoading = true;
-                  });
+                        try {
+                          await ref
+                              .read(productApiProvider)
+                              .saveFlower(
+                                name: nameController.text,
+                                shopName: shopController.text,
+                                description: descriptionController.text,
+                                aviable: aviable,
+                                image: _selectedImage!,
+                                location: locationController.text,
+                                price: double.parse(priceConrtoller.text),
+                                isFav: false,
+                              );
 
-                  try {
-                    await ref.read(productApiProvider).saveFlower(
-                      name: nameController.text,
-                      shopName: shopController.text,
-                      description: descriptionController.text,
-                      aviable: aviable,
-                      image: _selectedImage!,
-                      location: locationController.text,
-                      price: double.parse(priceConrtoller.text),
-                      isFav: false,
-                    );
-
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Successfully done!")),
-                    );
-                    Navigator.pop(context, true);
-                  } catch (e) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text("Error $e")));
-                  } finally{
-                    setState(() {
-                      isLoading = false;
-                    });
-                  }
-                },
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Successfully done!")),
+                          );
+                          Navigator.pop(context, true);
+                        } catch (e) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text("Error $e")));
+                        } finally {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      },
                 child: isLoading
-                ? SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(),
-                )
-                :Text("Save"),
+                    ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(),
+                      )
+                    : Text("Save"),
               ),
             ],
           ),

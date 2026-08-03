@@ -29,5 +29,5 @@ final cityRepositoryProvider = Provider<CityRepository>(
 );
 
 final productRepoProvider = Provider<ProductRepository>(
-  (ref) => ref.watch(apiProvider).productRepository,
+  (ref) => ref.watch(apiProvider).productRepositoryImpl,
 );

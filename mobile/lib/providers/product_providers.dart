@@ -4,16 +4,14 @@ import 'package:mobile/server/flower_api_server.dart';
 import 'repo_providers.dart';
 // import '../repositories/product_repository.dart'; // keyin ulanadi
 
-final productApiProvider = Provider<FlowerApiServer>(
-  (ref){
-    return FlowerApiServer(ref.read(apiProvider));
-  }
-);
-final productControllerProvider = FutureProvider<List<ProductModel>>(
-  (ref) async{
-    return await ref.read(productApiProvider).getData();
-  }
-);
+final productApiProvider = Provider<FlowerApiServer>((ref) {
+  return FlowerApiServer(ref.read(apiProvider));
+});
+final productControllerProvider = FutureProvider<List<ProductModel>>((
+  ref,
+) async {
+  return await ref.read(productApiProvider).getData();
+});
 // final productListProvider = FutureProvider<List<FlowerModel>>((ref) async {
 //   keyin repository orqali backenddan olinadi
 //   return [];

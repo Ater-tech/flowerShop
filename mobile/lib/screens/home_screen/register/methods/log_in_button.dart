@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/controllers/auth_controllers.dart';
-import 'package:mobile/auth/providers/remember_me_provider.dart';
+import 'package:mobile/controllers/auth_controllers.dart';
+import 'package:mobile/providers/remember_me_provider.dart';
 
 class LogInButton extends ConsumerWidget {
   final AsyncValue<void> authState;
@@ -37,4 +37,3 @@ class LogInButton extends ConsumerWidget {
     );
   }
 }
-  

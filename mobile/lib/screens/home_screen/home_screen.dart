@@ -1,7 +1,7 @@
 // lib/features/home/home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/providers/bottom_nav_provider.dart';
+import 'package:mobile/providers/bottom_nav_provider.dart';
 import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
 import 'package:mobile/screens/bottom_menu/messages_page.dart';
 import 'package:mobile/screens/bottom_menu/cart_page.dart';
@@ -24,10 +24,7 @@ class HomeScreen extends ConsumerWidget {
     final currentIndex = ref.watch(bottomNavIndexProvider);
 
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: currentIndex, children: _pages),
       bottomNavigationBar: const HomeBottomNavBar(),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/providers/repo_providers.dart';
+import 'package:mobile/providers/repo_providers.dart';
 import 'package:mobile/server/api_endpoints.dart';
 
 /// Token/sessiya borligini tekshiruvchi repository.
@@ -21,11 +21,11 @@ class AuthCheckRepositoryImpl implements AuthCheckRepository {
 
     final tokenStorage = ref.read(tokenStorageProvider);
     final rememberMe = await tokenStorage.getRememberMe();
-    if(!rememberMe) return false;
+    if (!rememberMe) return false;
     final refreshToken = await tokenStorage.getRefreshToken();
-    if(refreshToken == null) return false;
+    if (refreshToken == null) return false;
 
-    try{
+    try {
       final dio = ref.read(apiProvider).dio;
       final response = await dio.post(
         ApiEndpoints.refresh,
@@ -37,7 +37,7 @@ class AuthCheckRepositoryImpl implements AuthCheckRepository {
       await tokenStorage.deleteTokensAndRememberMe();
       return false;
     }
-    }    
+  }
 }
 
 /// Repository uchun provider — UI va Controller shu orqali bog'lanadi.

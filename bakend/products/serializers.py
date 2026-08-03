@@ -10,7 +10,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductModel
         exclude = ["image"]
-        read_only_fields = ["id", "updated_at", "created_at"]
+        read_only_fields = ["id", "updated_at", "created_at", "seller"]
         
     def get_image_url(self, obj):
         request = self.context.get("request")

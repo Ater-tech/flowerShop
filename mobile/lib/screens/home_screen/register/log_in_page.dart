@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/controllers/auth_controllers.dart';
+import 'package:mobile/controllers/auth_controllers.dart';
 import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
 import 'package:mobile/screens/home_screen/register/methods/log_in_button.dart';
 import 'package:mobile/screens/home_screen/register/methods/remember_me_method.dart';
@@ -25,7 +25,7 @@ class _LogInState extends ConsumerState<LogInPage> {
   final email = TextEditingController();
   final password = TextEditingController();
   @override
-  void dispose(){
+  void dispose() {
     username.dispose();
     email.dispose();
     password.dispose();
@@ -41,15 +41,18 @@ class _LogInState extends ConsumerState<LogInPage> {
     ref.listen<AsyncValue<void>>(authControllerProvider, (previous, next) {
       next.whenOrNull(
         error: (error, _) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Xatolik: $error"))
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Xatolik: $error")));
         },
         data: (data) {
-          if(previous is AsyncLoading){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage()));
+          if (previous is AsyncLoading) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
           }
-        }
+        },
       );
     });
     return Scaffold(
@@ -95,7 +98,11 @@ class _LogInState extends ConsumerState<LogInPage> {
                   ],
                 ),
                 SizedBox(height: 40),
-                LogInButton(authState:authState, email: email, password: password),
+                LogInButton(
+                  authState: authState,
+                  email: email,
+                  password: password,
+                ),
                 SizedBox(height: 10),
                 withEmailSignIn(context),
                 otherMethodsSignUp(),

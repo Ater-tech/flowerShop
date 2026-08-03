@@ -10,7 +10,7 @@ import '../error_handler/dio_failure_mapper.dart';
 class ProductRepositoryImpl implements ProductRepository {
   final Dio dio;
 
-  ProductRepositoryImpl(this.dio);
+  ProductRepositoryImpl({required this.dio});
 
   @override
   Future<Result<List<ProductModel>>> fetchProducts(ProductQuery query) async {

@@ -3,6 +3,7 @@ import 'discount_badge.dart';
 import 'original_badge.dart';
 import 'rating_row.dart';
 import 'package:mobile/models/product_model.dart';
+import 'favourite_button.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -47,7 +48,8 @@ class ProductCard extends StatelessWidget {
                   Positioned(
                     top: 6,
                     right: 6,
-                    child: _FavouriteButton(
+                    child: FavouriteButton(
+                      isLoading: isFavouriteLoading,
                       isFavourited: product.isFavourited,
                       onTap: onFavouriteTap,
                     ),
@@ -102,32 +104,6 @@ class ProductCard extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FavouriteButton extends StatelessWidget {
-  final bool isFavourited;
-  final VoidCallback? onTap;
-
-  const _FavouriteButton({required this.isFavourited, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(5),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          isFavourited ? Icons.favorite : Icons.favorite_border,
-          size: 16,
-          color: isFavourited ? Colors.red : Colors.black54,
         ),
       ),
     );

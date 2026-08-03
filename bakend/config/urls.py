@@ -24,19 +24,19 @@ urlpatterns = [
     path('api/', include('products.urls')),
     path('api/', include('city.urls')),
     path('api/', include('banners.urls')),
-    path('api/auth', include('users.urls')),
+    path('api/auth/', include('users.urls')),
     path('api/', include('favourites.urls')),
     path('api/', include('seller.urls')),
-    path(
-        'api/token/', 
-        TokenObtainPairView.as_view(), 
-        name = "token_obtain_pair"
-            ),
-    path(
-        'api/token/refresh/', 
-        TokenRefreshView.as_view(), 
-        name = "token_refresh"
-            )
+    # path(
+    #     'api/token/', 
+    #     TokenObtainPairView.as_view(), 
+    #     name = "token_obtain_pair"
+    #         ),
+    # path(
+    #     'api/token/refresh/', 
+    #     TokenRefreshView.as_view(), 
+    #     name = "token_refresh"
+    #         )
     # path('users/', include('users.urls'))
 ]
 

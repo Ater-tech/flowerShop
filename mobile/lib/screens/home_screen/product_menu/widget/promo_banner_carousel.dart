@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/providers/banner_provider.dart';
+import 'package:mobile/providers/banner_provider.dart';
 
 class PromoBannerCarousel extends ConsumerStatefulWidget {
   const PromoBannerCarousel({super.key});
@@ -43,9 +43,7 @@ class _PromoBannerCarouselState extends ConsumerState<PromoBannerCarousel> {
                     banner.imageUrl,
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    errorBuilder: (_, _, _) => Container(
-                      color: Colors.black12,
-                    ),
+                    errorBuilder: (_, _, _) => Container(color: Colors.black12),
                   ),
                 ),
               );

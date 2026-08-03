@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:mobile/repository/auth_interceptor.dart';
 import 'package:mobile/repository/auth_reprository.dart';
 import 'package:mobile/repository/city_repository.dart';
-import 'package:mobile/repository/product_repository.dart';
+import 'package:mobile/repository/product_repository_impl.dart';
 import 'package:mobile/storage/token_storage.dart';
 import 'package:mobile/repository/user_repository.dart';
 import 'package:mobile/server/api_endpoints.dart';
@@ -19,7 +19,7 @@ class ApiMainService {
   late final AuthReprository authReprository;
   late final UserRepository userReprository;
   late final CityRepository cityReprository;
-  late final ProductRepository productRepository;
+  late final ProductRepositoryImpl productRepositoryImpl;
 
   ApiMainService({required this.storage}) {
     _initRepositories();
@@ -31,16 +31,16 @@ class ApiMainService {
     authReprository = AuthReprository(api: dio, storage: storage);
     userReprository = UserRepository(api: dio, storage: storage);
     cityReprository = CityRepository(dio: dio, storage: storage);
-    productRepository = ProductRepository(dio: dio, storage: storage);
+    productRepositoryImpl = ProductRepositoryImpl(dio: dio);
   }
 
   void _initInterceptors() {
     dio.interceptors.add(
       LogInterceptor(
-        requestBody: true,
-        requestHeader: true,
-        responseBody: true,
-        responseHeader: true,
+        requestBody: false,
+        requestHeader: false,
+        responseBody: false,
+        responseHeader: false,
       ),
     );
     dio.interceptors.add(

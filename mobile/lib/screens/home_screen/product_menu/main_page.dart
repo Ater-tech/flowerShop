@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/providers/banner_provider.dart';
-import 'package:mobile/auth/providers/product_providers.dart';
+import 'package:mobile/providers/banner_provider.dart';
+import 'package:mobile/providers/product_providers.dart';
 import 'package:mobile/screens/home_screen/product_menu/widget/on_refresh.dart';
 import 'package:mobile/screens/home_screen/search/search_page.dart';
 import 'widget/location_now.dart';
@@ -32,7 +32,9 @@ class HomePage extends ConsumerWidget {
         body: SafeArea(
           bottom: false,
           child: ProductRefreshIndicator(
-            onRefresh: () { return onRefresh(ref);},
+            onRefresh: () {
+              return onRefresh(ref);
+            },
             child: CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
@@ -41,7 +43,10 @@ class HomePage extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: HomeSearchField(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchPage()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SearchPage()),
+                      );
                     },
                     onFavoriteTap: () {
                       // sevimlilar sahifasiga o'tish
@@ -79,16 +84,16 @@ class HomePage extends ConsumerWidget {
 
   Future<void> onRefresh(WidgetRef ref) async {
     final completer = Completer<void>();
-  SchedulerBinding.instance.addPostFrameCallback((_) async {
-    ref.invalidate(productControllerProvider);
-    await ref.read(productControllerProvider.future);
-    ref.invalidate(bannerListProvider);
-    await ref.read(bannerListProvider.future);
-    completer.complete();
-  });
-  return completer.future;
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      ref.invalidate(productControllerProvider);
+      await ref.read(productControllerProvider.future);
+      ref.invalidate(bannerListProvider);
+      await ref.read(bannerListProvider.future);
+      completer.complete();
+    });
+    return completer.future;
     // agar boshqa bloklar ham yangilanishi kerak bo'lsa:
     // ref.invalidate(bannerListProvider);
-    // ref.invalidate(occasionCategoryListProvider);    
+    // ref.invalidate(occasionCategoryListProvider);
   }
 }

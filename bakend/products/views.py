@@ -11,14 +11,18 @@ from django_filters.rest_framework import DjangoFilterBackend
 class FlowerViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = ProductModel.objects.all().order_by("created_at")
-    permission_class = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["name", "description"]
     ordering_fields = ["price", "rating_avg", "sold_count", "created_at"]
     filterset_fields = ["city", "seller"]
-    
+
+    def perform_create(self, serializer):
+        seller = self.request.user.seller  # User -> Seller OneToOne/ForeignKey deb faraz qilyapman
+        serializer.save(seller=seller)
+        
     def get_queryset(self):
-        qs = Flower.objects.select_related("seller", "city")
+        qs = ProductModel.objects.select_related("seller", "city")
         
         premium_only = self.request.query_params.get("premium_sellers")
         if premium_only == "true":

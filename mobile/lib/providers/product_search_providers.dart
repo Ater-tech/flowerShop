@@ -1,6 +1,7 @@
 // application/product_search_providers.dart
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import '../models/product_model.dart';
 import '../models/product_models/product_query.dart';
 import '../error_handler/error_result.dart';
@@ -54,8 +55,8 @@ final productListProvider = FutureProvider.autoDispose<List<ProductModel>>((
 
   final result = await repository.fetchProducts(query);
 
-  return result.when(
-    success: (products) => products,
-    error: (failure) => throw failure,
-  );
+  return switch (result) {
+    Success(data: final products) => products,
+    Error(failure: final f) => throw f,
+  };
 });

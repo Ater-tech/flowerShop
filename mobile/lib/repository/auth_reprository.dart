@@ -14,14 +14,14 @@ class AuthReprository {
     required String password,
   }) async {
     try {
-      // final response = 
+      // final response =
       await api.post(
         ApiEndpoints.register,
         data: {"username": username, "password": password},
       );
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       debugPrint("xatolik: repo: ${e.response?.statusCode}");
-      debugPrint("xatolik: repo: ${e.response?.data}");
+      // debugPrint("xatolik: repo: ${e.response?.headers}");
       rethrow;
     }
   }
@@ -30,7 +30,7 @@ class AuthReprository {
     required String username,
     required String password,
     required bool rememberMe,
-  }) async{
+  }) async {
     try {
       final response = await api.post(
         ApiEndpoints.login,
@@ -39,39 +39,43 @@ class AuthReprository {
       await storage.saveAccessToken(response.data["access"]);
       await storage.saveRefreshToken(response.data["refresh"]);
       await storage.saveRememberMe(rememberMe);
-    } on DioException catch(e){
-      debugPrint("Xatolik: login: $e");
+    } on DioException catch (e) {
+      debugPrint("Xatolik: login: ${e.response!.statusCode}");
+      // debugPrint("Xatolik: login: ${e.response!.data}");
       rethrow;
-    }    
+    }
   }
+
   Future<void> logout({
     required String username,
     required String password,
-  }) async{
-    try {      
+  }) async {
+    try {
       await storage.deleteTokensAndRememberMe();
-    } catch(e){
-      debugPrint("Xatolik: login: $e");
+    } catch (e) {
+      debugPrint("Xatolik: logout: $e");
       rethrow;
-    }    
+    }
   }
+
   Future<bool> shouldAutoLogin() async {
-  final rememberMe = await storage.getRememberMe();
-  if (!rememberMe) return false;
+    final rememberMe = await storage.getRememberMe();
+    if (!rememberMe) return false;
 
-  final refreshToken = await storage.getRefreshToken();
-  if (refreshToken == null) return false;
+    final refreshToken = await storage.getRefreshToken();
+    if (refreshToken == null) return false;
 
-  try {
-    final response = await api.post(ApiEndpoints.refresh, data: {
-      'refresh': refreshToken,
-    });
-    final newAccess = response.data['access'] as String;
-    await storage.saveAccessToken(newAccess);
-    return true;
-  } catch (_) {
-    await storage.deleteTokensAndRememberMe();
-    return false;
+    try {
+      final response = await api.post(
+        ApiEndpoints.refresh,
+        data: {'refresh': refreshToken},
+      );
+      final newAccess = response.data['access'] as String;
+      await storage.saveAccessToken(newAccess);
+      return true;
+    } catch (_) {
+      await storage.deleteTokensAndRememberMe();
+      return false;
+    }
   }
-}
 }

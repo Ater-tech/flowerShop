@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/providers/bottom_nav_provider.dart';
+import 'package:mobile/providers/bottom_nav_provider.dart';
 import 'package:mobile/screens/crud_product/add_product_page.dart';
 
 class HomeBottomNavBar extends ConsumerWidget {

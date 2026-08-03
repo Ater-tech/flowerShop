@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/providers/occasion_category_provider.dart';
+import 'package:mobile/providers/occasion_category_provider.dart';
 
 class OccasionCategoryRow extends ConsumerWidget {
   final void Function(int categoryId)? onCategoryTap;

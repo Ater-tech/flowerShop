@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/providers/city_provider.dart';
+import 'package:mobile/providers/city_provider.dart';
 import 'package:mobile/screens/home_screen/location/location_of_destination.dart';
 
 class DeliveryLocationHeader extends ConsumerWidget {
@@ -40,7 +40,7 @@ class DeliveryLocationHeader extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.black.withValues(alpha: .5),
-              ),              
+              ),
             ),
           ],
         ),

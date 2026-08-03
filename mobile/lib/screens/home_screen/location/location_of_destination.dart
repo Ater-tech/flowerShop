@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/models/city_model/city_model.dart';
-import 'package:mobile/auth/providers/city_provider.dart';
+import 'package:mobile/providers/city_provider.dart';
 
 class LocationOfDestination extends ConsumerWidget {
   const LocationOfDestination({super.key});
@@ -25,8 +25,7 @@ class LocationOfDestination extends ConsumerWidget {
                   cities: cities,
                   selectedCity: selectedCityAsync.value,
                 ),
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, _) => Center(child: Text('Xatolik: $err')),
               ),
             ),
@@ -112,10 +111,12 @@ class _CityList extends ConsumerWidget {
         final isSelected = selectedCity?.id == city.id;
 
         return InkWell(
-          onTap: () async{
+          onTap: () async {
             // ref.read(selectedCityProvider.notifier).selectCity(city);
             await ref.read(selectedCityProvider.notifier).selectCity(city);
-            if(context.mounted){Navigator.of(context).pop(city);}
+            if (context.mounted) {
+              Navigator.of(context).pop(city);
+            }
           },
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -138,11 +139,17 @@ class _CityList extends ConsumerWidget {
                 if (isSelected)
                   const Padding(
                     padding: EdgeInsets.only(right: 8),
-                    child: Icon(Icons.check,
-                        color: Color(0xFF7ED957), size: 20),
+                    child: Icon(
+                      Icons.check,
+                      color: Color(0xFF7ED957),
+                      size: 20,
+                    ),
                   ),
-                const Icon(Icons.arrow_forward_ios,
-                    color: Colors.black54, size: 16),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black54,
+                  size: 16,
+                ),
               ],
             ),
           ),

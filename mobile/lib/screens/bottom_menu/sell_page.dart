@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/auth/providers/bottom_nav_provider.dart';
+import 'package:mobile/providers/bottom_nav_provider.dart';
 import 'package:mobile/screens/crud_product/add_product_page.dart';
+
 class HomeBottomNavBar extends ConsumerWidget {
   const HomeBottomNavBar({super.key});
 
@@ -16,10 +17,12 @@ class HomeBottomNavBar extends ConsumerWidget {
         // lekin currentIndex ni o'zgartirmaymiz
         if (index == 2) {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) {
-              // return const CreateListingPage();
-              return const AddProductPage();
-              }),
+            MaterialPageRoute(
+              builder: (_) {
+                // return const CreateListingPage();
+                return const AddProductPage();
+              },
+            ),
           );
           return;
         }
@@ -36,14 +39,8 @@ class HomeBottomNavBar extends ConsumerWidget {
           activeIcon: Icon(Icons.home),
           label: 'Bosh sahifa',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.message),
-          label: 'Xabarlar',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add),
-          label: 'Sell',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Xabarlar'),
+        BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Sell'),
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_bag_outlined),
           label: 'Savat',

@@ -61,7 +61,9 @@ class ProductModel {
       createdAt: DateTime.parse(data['created_at']),
       updatedAt: DateTime.parse(data['updated_at']),
       price: _parseDouble(data['price']),
-      oldPrice: data['old_price'] == null ? null : _parseDouble(data['old_price']),
+      oldPrice: data['old_price'] == null
+          ? null
+          : _parseDouble(data['old_price']),
       discountPercent: data['discount_percent'] ?? 0,
       sellerId: data['seller'] as int,
       sellerName: _checkString(data['seller_name']),

@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/providers/banner_provider.dart';
-import 'package:mobile/providers/product_providers.dart';
+import 'package:mobile/providers/repo_providers.dart';
 import 'package:mobile/screens/home_screen/product_menu/widget/on_refresh.dart';
 import 'package:mobile/screens/home_screen/search/search_page.dart';
 import 'widget/location_now.dart';
@@ -85,8 +85,8 @@ class HomePage extends ConsumerWidget {
   Future<void> onRefresh(WidgetRef ref) async {
     final completer = Completer<void>();
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      ref.invalidate(productControllerProvider);
-      await ref.read(productControllerProvider.future);
+      ref.invalidate(productRepoProvider);
+      await ref.read(productRepoProvider);
       ref.invalidate(bannerListProvider);
       await ref.read(bannerListProvider.future);
       completer.complete();

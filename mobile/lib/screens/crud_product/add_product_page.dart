@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:mobile/providers/product_providers.dart';
+import 'package:mobile/providers/product_repo_providers.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProductPage extends ConsumerStatefulWidget {
@@ -17,16 +16,15 @@ class AddProductPage extends ConsumerStatefulWidget {
 
 class _AddState extends ConsumerState<AddProductPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController shopController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController priceConrtoller = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
-  DateTime? created;
-  bool aviable = false;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceConrtoller = TextEditingController();
+  final TextEditingController _oldPriceConrtoller = TextEditingController();
+  bool available = false;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   late bool isLoading;
+  int? _selectedCityId;
   @override
   void initState() {
     isLoading = false;
@@ -43,58 +41,27 @@ class _AddState extends ConsumerState<AddProductPage> {
           child: ListView(
             children: [
               TextFormField(
-                controller: nameController,
+                controller: _nameController,
                 decoration: InputDecoration(labelText: "Flower name"),
                 validator: validatorNotEmNotNull,
               ),
               TextFormField(
-                controller: shopController,
-                decoration: InputDecoration(labelText: "Shop name"),
-                validator: validatorNotEmNotNull,
-              ),
-              TextFormField(
-                controller: descriptionController,
+                controller: _descriptionController,
                 decoration: InputDecoration(labelText: "Descriptions..."),
                 validator: validatorNotEmNotNull,
               ),
               TextFormField(
-                controller: priceConrtoller,
+                controller: _priceConrtoller,
                 decoration: InputDecoration(labelText: "Price..."),
-                validator: validatorNotEmNotNull,
-              ),
-              TextFormField(
-                controller: locationController,
-                decoration: InputDecoration(labelText: "Location..."),
                 validator: validatorNotEmNotNull,
               ),
               SwitchListTile(
                 title: Text("Available"),
-                value: aviable,
+                value: available,
                 onChanged: (val) {
                   setState(() {
-                    aviable = val;
+                    available = val;
                   });
-                },
-              ),
-              ListTile(
-                title: Text(
-                  created == null
-                      ? "Please  choose the date"
-                      : DateFormat('yyyy-MM-dd').format(created!),
-                ),
-                trailing: Icon(Icons.calendar_today),
-                onTap: () async {
-                  final pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: created ?? DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                  );
-                  if (pickedDate != null) {
-                    setState(() {
-                      created = pickedDate;
-                    });
-                  }
                 },
               ),
               ElevatedButton(
@@ -116,18 +83,15 @@ class _AddState extends ConsumerState<AddProductPage> {
                         if (!_formKey.currentState!.validate()) {
                           return;
                         }
-                        // if (_selectedImage == null) {
-                        //   return;
-                        // }
-                        if (created == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Choose date ...")),
-                          );
-                          return;
-                        }
                         if (_selectedImage == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("CHoose image ...")),
+                          );
+                          return;
+                        }
+                        if (_selectedCityId == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Shahar tanlang')),
                           );
                           return;
                         }
@@ -137,16 +101,14 @@ class _AddState extends ConsumerState<AddProductPage> {
 
                         try {
                           await ref
-                              .read(productApiProvider)
+                              .read(productRepositoryProvider)
                               .saveFlower(
-                                name: nameController.text,
-                                shopName: shopController.text,
-                                description: descriptionController.text,
+                                name: _nameController.text,
+                                cityId: _selectedCityId!,
+                                description: _descriptionController.text,
                                 available: available,
                                 image: _selectedImage!,
-                                location: locationController.text,
-                                price: double.parse(priceConrtoller.text),
-                                isFav: false,
+                                price: double.parse(_priceConrtoller.text),
                               );
 
                           if (!context.mounted) return;
@@ -185,5 +147,12 @@ class _AddState extends ConsumerState<AddProductPage> {
       return "Required field!";
     }
     return null;
+  }
+
+  int get _calculatedDiscount {
+    final price = double.tryParse(_priceConrtoller.text);
+    final oldPrice = double.tryParse(_oldPriceConrtoller.text);
+    if (price == null || oldPrice == null || oldPrice <= price) return 0;
+    return (((oldPrice - price) / oldPrice) * 100).round();
   }
 }

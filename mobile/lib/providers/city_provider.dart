@@ -32,18 +32,6 @@ class SelectedCityNotifier extends AsyncNotifier<CityModel?> {
     if (saved != null) return saved;
 
     final cities = await ref.watch(cityListProvider.future);
-    // debugPrint("Location request....");
-    //Geolocatsiyani o'chiramiz!!! keyinchalik alohida qo'shamiz
-    // final cityName = await LocationService().getCurrentCityName();
-    // debugPrint("Location response -> $cityName");
-
-    // if (cityName != null) {
-    //   final matched = cities.where(
-    //     (c) => c.name.toLowerCase() == cityName.toLowerCase(),
-    //   );
-    //   if (matched.isNotEmpty) return matched.first;
-    // }
-
     return cities.isNotEmpty ? cities.first : null;
   }
 

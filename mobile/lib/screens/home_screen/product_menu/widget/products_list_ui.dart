@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/providers/product_repo_providers.dart';
+import 'package:mobile/controllers/product_controller.dart';
 import 'package:mobile/screens/home_screen/product_cart/card_product.dart';
 
 class ProductGridList extends ConsumerWidget {
@@ -8,7 +8,7 @@ class ProductGridList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final productsAsync = ref.watch(productRepositoryProvider);
+    final productsAsync = ref.watch(productControllerProvider);
 
     return productsAsync.when(
       data: (products) {

@@ -1,5 +1,6 @@
 from django.db import models
-
+from city.models import City
+from seller.models import Seller
 class Shop(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=250)

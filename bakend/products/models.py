@@ -3,18 +3,14 @@ from seller.models import Seller
 from city.models import City
  
 class ProductModel(models.Model):
-    # id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=50, help_text= "Enter the name of the flower", default="No named")
-    # shop_name = models.CharField(max_length=50)
     image = models.ImageField(upload_to="images/")
     description = models.TextField(max_length=1500)
-    # location = models.TextField(max_length=50)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, related_name="flowers")
     available = models.BooleanField()
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # is_favourite = models.BooleanField(default=False)
     
     price = models.DecimalField(max_digits=12, decimal_places=3)
     old_price = models.DecimalField(
@@ -33,6 +29,12 @@ class ProductModel(models.Model):
     sold_count = models.PositiveIntegerField(default=0)  
     view_count = models.PositiveIntegerField(default=0)
     is_original = models.BooleanField(default=False)  # 
+    
+    STATUS_CHOICES = [
+        ('active', 'Faol'),
+        ('sold', 'Sotildi'),   # faqat personal uchun ishlatiladi
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
     
     class Meta:
         ordering = ["-created_at"]

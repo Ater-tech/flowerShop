@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'banners',
     'favourites',
     'seller',
+    'shop',
     'rest_framework',
     'rest_framework_simplejwt',
 

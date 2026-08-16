@@ -16,12 +16,13 @@ class ShopViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsShopOwnerOrReadOnly]
 
     def get_queryset(self):
-        return Shop.objects.filter(
-            seller__user=self.request.user
-        ).annotate(
-            total_sold=Sum('products__sold_count'),
-            product_count=Count('products'),
-        )
+        return Shop.objects.filter(seller__user=self.request.user)
+        # return Shop.objects.filter(
+        #     seller__user=self.request.user
+        # ).annotate(
+        #     total_sold=Sum('products__sold_count'),
+        #     product_count=Count('products'),
+        # )
 
     def perform_create(self, serializer):
         serializer.save(seller=self.request.user.seller)

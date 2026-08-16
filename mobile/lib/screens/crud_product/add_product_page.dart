@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/providers/product_repo_providers.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile/models/shop_model.dart';
 
 class AddProductPage extends ConsumerStatefulWidget {
-  const AddProductPage({super.key});
+  final  ShopModel shop;
+  const AddProductPage({super.key, required this.shop});
 
   @override
   ConsumerState<AddProductPage> createState() {
@@ -19,7 +21,7 @@ class _AddState extends ConsumerState<AddProductPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceConrtoller = TextEditingController();
-  final TextEditingController _oldPriceConrtoller = TextEditingController();
+  // final TextEditingController _oldPriceConrtoller = TextEditingController();
   bool available = false;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
@@ -149,10 +151,10 @@ class _AddState extends ConsumerState<AddProductPage> {
     return null;
   }
 
-  int get _calculatedDiscount {
-    final price = double.tryParse(_priceConrtoller.text);
-    final oldPrice = double.tryParse(_oldPriceConrtoller.text);
-    if (price == null || oldPrice == null || oldPrice <= price) return 0;
-    return (((oldPrice - price) / oldPrice) * 100).round();
-  }
+  // int get _calculatedDiscount {
+  //   final price = double.tryParse(_priceConrtoller.text);
+  //   final oldPrice = double.tryParse(_oldPriceConrtoller.text);
+  //   if (price == null || oldPrice == null || oldPrice <= price) return 0;
+  //   return (((oldPrice - price) / oldPrice) * 100).round();
+  // }
 }

@@ -29,6 +29,13 @@ class ProductModel(models.Model):
     sold_count = models.PositiveIntegerField(default=0)  
     view_count = models.PositiveIntegerField(default=0)
     is_original = models.BooleanField(default=False)  # 
+    # # products/models.py
+    # shop = models.ForeignKey(
+    #     'shop.Shop',
+    #     on_delete=models.PROTECT,
+    #     related_name='products',
+    #     null=True,   # hozircha, keyin False qilaman
+    # )
     
     STATUS_CHOICES = [
         ('active', 'Faol'),

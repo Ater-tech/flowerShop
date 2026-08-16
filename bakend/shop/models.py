@@ -1,6 +1,8 @@
 from django.db import models
 from city.models import City
 from seller.models import Seller
+from django.core.exceptions import ValidationError
+
 class Shop(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=250)

@@ -12,8 +12,12 @@ class ShopSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'shop_type', 'name', 'address', 'city', 'city_name',
             'latitude', 'longitude', 'is_default',
-            'total_sold', 'product_count',
         ]
+        # fields = [
+        #     'id', 'shop_type', 'name', 'address', 'city', 'city_name',
+        #     'latitude', 'longitude', 'is_default',
+        #     'total_sold', 'product_count',
+        # ]
 
     def validate(self, attrs):
         shop_type = attrs.get('shop_type', getattr(self.instance, 'shop_type', 'personal'))

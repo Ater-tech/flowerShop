@@ -4,7 +4,7 @@ from seller.models import Seller
 from django.core.exceptions import ValidationError
 
 class Shop(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=True)
     address = models.CharField(max_length=250)
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='shops')
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='shops')

@@ -13,5 +13,7 @@ class ApiEndpoints {
   static const userCity = "/api/user/city/";
   static const banners = "/api/banners/";
   static const shops = "/api/shops/";
+  static const sellerMe = '/api/sellers/me/';
+  static const sellers = '/api/sellers/';
   
 }

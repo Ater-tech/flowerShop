@@ -6,7 +6,7 @@ class SellerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seller
         fields = [
-            "id", "shop_name", "rating_avg",
+            "id", "rating_avg",
             "is_premium", "premium_expires_at", "created_at",
         ]
         read_only_fields = [

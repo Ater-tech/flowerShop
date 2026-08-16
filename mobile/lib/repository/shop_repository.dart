@@ -1,5 +1,4 @@
 import "package:dio/dio.dart";
-import "package:flutter/foundation.dart";
 import "package:mobile/error_handler/dio_failure_mapper.dart";
 import "package:mobile/server/api_endpoints.dart";
 

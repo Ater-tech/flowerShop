@@ -4,6 +4,7 @@ import 'package:mobile/repository/auth_reprository.dart';
 import 'package:mobile/repository/city_repository.dart';
 import 'package:mobile/repository/product_repository_impl.dart';
 import 'package:mobile/repository/shop_repository.dart';
+import 'package:mobile/repository/seller_repository.dart';
 import 'package:mobile/storage/token_storage.dart';
 import 'package:mobile/repository/user_repository.dart';
 import 'package:mobile/server/api_endpoints.dart';
@@ -22,6 +23,7 @@ class ApiMainService {
   late final CityRepository cityReprository;
   late final ProductRepositoryImpl productRepositoryImpl;
   late final ShopRepositoryImpl shopRepositoryImpl;
+  late final SellerRepositoryImpl sellerRepositoryImpl;
 
   ApiMainService({required this.storage}) {
     _initRepositories();
@@ -35,6 +37,7 @@ class ApiMainService {
     cityReprository = CityRepository(dio: dio, storage: storage);
     productRepositoryImpl = ProductRepositoryImpl(dio: dio);  
     shopRepositoryImpl = ShopRepositoryImpl(api: dio);  
+    sellerRepositoryImpl = SellerRepositoryImpl(dio: dio);  
   }
 
   void _initInterceptors() {

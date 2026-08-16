@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/providers/seller_provider.dart';
 import 'package:mobile/providers/shop_provider.dart';
 import 'package:mobile/screens/crud_product/add_product_page.dart';
+import 'package:mobile/screens/crud_product/seller_account/seller_on_boarding_page.dart';
 import 'package:mobile/screens/crud_product/seller_account/shop_on_boarding.dart';
 import 'package:mobile/screens/crud_product/shop_dropdown.dart';
 import 'package:mobile/screens/crud_product/shop_info_card.dart';
@@ -10,12 +12,41 @@ class AddProductEntryPage extends ConsumerStatefulWidget {
   const AddProductEntryPage({super.key});
 
   @override
-  ConsumerState<AddProductEntryPage> createState() => _AddProductEntryPageState();
+  ConsumerState<AddProductEntryPage> createState() =>
+      _AddProductEntryPageState();
 }
 
 class _AddProductEntryPageState extends ConsumerState<AddProductEntryPage> {
   int? _selectedShopId;
 
+  @override
+  Widget build(BuildContext context) {
+    final sellerAsync = ref.watch(sellerProfileProvider);
+    return Scaffold(
+      appBar: AppBar(title: const Text("Mahsulot qo'shish")),
+      body: sellerAsync.when(
+        loading: ()=> const Center(child: CircularProgressIndicator(),),
+        error: (error, _) => Center(child: Text("xatolik: $error"),), 
+        data: (seller){
+          if (seller == null){
+            return const SellerOnboardingPage();
+          }
+        return const _ShopStep(); 
+        }
+        ),
+    );
+  }
+  
+}
+
+class _ShopStep extends ConsumerStatefulWidget{
+  const _ShopStep();
+  @override
+  ConsumerState<_ShopStep> createState()=> _ShopStepState();
+}
+
+class _ShopStepState extends ConsumerState<_ShopStep>{
+  int? _selectedShopId;
   @override
   Widget build(BuildContext context) {
     final shopsAsync = ref.watch(sellerShopsProvider);
@@ -68,7 +99,9 @@ class _AddProductEntryPageState extends ConsumerState<AddProductEntryPage> {
                   onPressed: () async {
                     await Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const ShopOnboardingPage()),
+                      MaterialPageRoute(
+                        builder: (_) => const ShopOnboardingPage(),
+                      ),
                     );
                     ref.invalidate(sellerShopsProvider);
                   },
@@ -80,11 +113,11 @@ class _AddProductEntryPageState extends ConsumerState<AddProductEntryPage> {
                   onPressed: selectedShop == null
                       ? null // shops bo'sh bo'lsa — tugma o'chiq (yonmaydi)
                       : () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => AddProductPage(shop: selectedShop),
-                            ),
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => AddProductPage(shop: selectedShop),
                           ),
+                        ),
                   child: Text(
                     selectedShop == null
                         ? 'Davom etish'

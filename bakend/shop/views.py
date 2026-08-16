@@ -25,7 +25,7 @@ class ShopViewSet(viewsets.ModelViewSet):
         # )
 
     def perform_create(self, serializer):
-        serializer.save(seller=self.request.user.seller)
+        serializer.save(seller=self.request.user.seller_profile)
 
     @action(detail=True, methods=['post'])
     def set_default(self, request, pk=None):

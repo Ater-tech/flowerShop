@@ -4,8 +4,8 @@ from .models import Shop
 
 class ShopSerializer(serializers.ModelSerializer):
     city_name = serializers.CharField(source='city.name', read_only=True)
-    total_sold = serializers.IntegerField(read_only=True)   # annotate orqali keladi
-    product_count = serializers.IntegerField(read_only=True)  # annotate orqali keladi
+    # total_sold = serializers.IntegerField(read_only=True)   # annotate orqali keladi
+    # product_count = serializers.IntegerField(read_only=True)  # annotate orqali keladi
 
     class Meta:
         model = Shop

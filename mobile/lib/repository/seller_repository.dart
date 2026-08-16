@@ -32,7 +32,7 @@ class SellerRepositoryImpl implements SellerRepository {
       final response = await dio.post(ApiEndpoints.sellers, data: {});
       return Success(SellerModel.fromJson(response.data));
     } on DioException catch (e) {
-      debugPrint('BECOME SELLER ERROR: ${e.response?.statusCode} - ${e.response?.data}');
+      debugPrint('BECOME SELLER ERROR: ${e.response?.statusCode} -');
       return Error(mapDioExceptionToFailure(e));
     }
   }

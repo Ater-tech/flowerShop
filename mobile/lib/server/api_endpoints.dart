@@ -12,5 +12,6 @@ class ApiEndpoints {
   static const citiesList = "/api/cities/";
   static const userCity = "/api/user/city/";
   static const banners = "/api/banners/";
+  static const shops = "/api/shops/";
   
 }

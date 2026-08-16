@@ -1,5 +1,7 @@
 import "package:dio/dio.dart";
+import "package:flutter/foundation.dart";
 import "package:mobile/error_handler/dio_failure_mapper.dart";
+import "package:mobile/server/api_endpoints.dart";
 
 import "../models/shop_model.dart";
 import "../error_handler/error_result.dart";
@@ -17,7 +19,7 @@ class ShopRepositoryImpl implements ShopRepository {
   @override
   Future<Result<List<ShopModel>>> getMyShops() async {
     try {
-      final response = await api.get('/shops/');
+      final response = await api.get(ApiEndpoints.shops);
       final shops = (response.data as List)
           .map((e) => ShopModel.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -30,9 +32,10 @@ class ShopRepositoryImpl implements ShopRepository {
   @override
   Future<Result<ShopModel>> createShop(ShopModel shop) async {
     try {
-      final response = await api.post('/shops/', data: shop.toJson());
+      final response = await api.post(ApiEndpoints.shops, data: shop.toJson());
       return Success(ShopModel.fromJson(response.data));
     } on DioException catch (e) {
+      // debugPrint('ERROR RESPONSE: ${e.response?.data}');  // ← vaqtinchalik
       return Error(mapDioExceptionToFailure(e));
     }
   }
@@ -40,7 +43,7 @@ class ShopRepositoryImpl implements ShopRepository {
   @override
   Future<Result<void>> setDefault(int shopId) async {
     try {
-      await api.post('/shops/$shopId/set_default/');
+      await api.post('${ApiEndpoints.shops}$shopId/set_default/');
       return const Success(null);
     } on DioException catch (e) {
       return Error(mapDioExceptionToFailure(e));

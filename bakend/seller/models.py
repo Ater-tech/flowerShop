@@ -16,4 +16,4 @@ class Seller(models.Model):
         )
     
     def __str__(self):
-        return self.shop_name
+        return self.user.get_username()

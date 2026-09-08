@@ -50,7 +50,7 @@ class ProductPricingConfig(models.Model):
     Faqat bitta qator bo'lishi kerak (singleton pattern).
     Admin panel orqali narxlar va limitlar shu yerdan o'zgartiriladi.
     """
-    free_product_limit = models.PositiveIntegerField(default=1)
+    free_product_limit = models.PositiveIntegerField(default=100)
     price_per_extra_product = models.PositiveIntegerField(default=5000)
 
     def save(self, *args, **kwargs):

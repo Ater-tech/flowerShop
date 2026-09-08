@@ -52,7 +52,7 @@ class _ShopStepState extends ConsumerState<_ShopStep>{
     final shopsAsync = ref.watch(sellerShopsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Mahsulot qo'shish")),
+      // appBar: AppBar(title: const Text("Mahsulot qo'shish")),
       body: shopsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(child: Text('Xatolik: $error')),

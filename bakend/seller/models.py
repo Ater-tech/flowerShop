@@ -11,7 +11,7 @@ class Seller(models.Model):
     premium_expires_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     paid_product_slots = models.PositiveIntegerField(
-            default=0,
+            default=100,
             help_text="Foydalanuvchi 5000 so'mga sotib olgan, hali ishlatilmagan qo'shimcha mahsulot slotlari"
         )
     

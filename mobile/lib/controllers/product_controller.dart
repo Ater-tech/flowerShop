@@ -37,7 +37,7 @@ class ProductController extends AsyncNotifier<List<ProductModel>> {
     final result = await repo.saveFlower(
       name: name,
       description: description,
-      cityId: cityId,
+      shopId: cityId,
       price: price,
       available: available,
       image: image,

@@ -43,7 +43,7 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<Result<ProductModel>> saveFlower({
     required String name,
     required String description,
-    required int cityId,
+    required int shopId,
     required double price,
     required bool available,
     required File image,
@@ -55,7 +55,7 @@ class ProductRepositoryImpl implements ProductRepository {
       final formData = FormData.fromMap({
         'name': name,
         'description': description,
-        'city': cityId,
+        'shop': shopId,
         'price': price.toStringAsFixed(3),
         if (oldPrice != null) 'old_price': oldPrice.toStringAsFixed(2),
         'discount_percent': discountPercent,

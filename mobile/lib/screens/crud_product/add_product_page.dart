@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/error_handler/error_result.dart';
+import 'package:mobile/error_handler/failure.dart';
 import 'package:mobile/providers/product_repo_providers.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/models/shop_model.dart';
@@ -26,7 +28,6 @@ class _AddState extends ConsumerState<AddProductPage> {
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   late bool isLoading;
-  int? _selectedCityId;
   @override
   void initState() {
     isLoading = false;
@@ -79,64 +80,60 @@ class _AddState extends ConsumerState<AddProductPage> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        if (!_formKey.currentState!.validate()) {
-                          return;
-                        }
-                        if (_selectedImage == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("CHoose image ...")),
-                          );
-                          return;
-                        }
-                        if (_selectedCityId == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Shahar tanlang')),
-                          );
-                          return;
-                        }
-                        setState(() {
-                          isLoading = true;
-                        });
+  onPressed: isLoading
+      ? null
+      : () async {
+          if (!_formKey.currentState!.validate()) {
+            return;
+          }
+          if (_selectedImage == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Choose image ...")),
+            );
+            return;
+          }
 
-                        try {
-                          await ref
-                              .read(productRepositoryProvider)
-                              .saveFlower(
-                                name: _nameController.text,
-                                cityId: _selectedCityId!,
-                                description: _descriptionController.text,
-                                available: available,
-                                image: _selectedImage!,
-                                price: double.parse(_priceConrtoller.text),
-                              );
+          setState(() => isLoading = true);
 
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Successfully done!")),
-                          );
-                          Navigator.pop(context, true);
-                        } catch (e) {
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text("Error $e")));
-                        } finally {
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }
-                      },
-                child: isLoading
-                    ? SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(),
-                      )
-                    : Text("Save"),
-              ),
+          final result = await ref
+              .read(productRepositoryProvider)
+              .saveFlower(
+                name: _nameController.text,
+                description: _descriptionController.text,
+                shopId: widget.shop.id!,
+                available: available,
+                image: _selectedImage!,
+                price: double.parse(_priceConrtoller.text),
+              );
+
+          if (!context.mounted) return;
+          setState(() => isLoading = false);
+
+          switch (result) {
+            case Success():
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Successfully done!")),
+              );
+              Navigator.pop(context, true);
+
+            case Error(failure: PaymentRequiredFailure failure):
+              _showPaymentRequiredDialog(context, failure);
+
+            case Error(failure: ValidationFailure failure):
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Xatolik: ${(failure).errors}")),
+              );
+
+            case Error(:final failure):
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Xatolik: ${failure.runtimeType}")),
+              );
+          }
+        },
+  child: isLoading
+      ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator())
+      : const Text("Save"),
+),
             ],
           ),
         ),
@@ -151,6 +148,28 @@ class _AddState extends ConsumerState<AddProductPage> {
     return null;
   }
 
+  void _showPaymentRequiredDialog(BuildContext context, PaymentRequiredFailure failure) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: const Text("Limit tugadi"),
+      content: Text(failure.message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Bekor qilish"),
+        ),
+        FilledButton(
+          onPressed: () {
+            Navigator.pop(context);
+            // Payme/Click integratsiyasi ulanganda shu yerga yo'naltiriladi
+          },
+          child: Text("To'lash (${failure.pricePerProduct} so'm)"),
+        ),
+      ],
+    ),
+  );
+}
   // int get _calculatedDiscount {
   //   final price = double.tryParse(_priceConrtoller.text);
   //   final oldPrice = double.tryParse(_oldPriceConrtoller.text);

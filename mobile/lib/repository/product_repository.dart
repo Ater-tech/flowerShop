@@ -1,4 +1,3 @@
-// domain/repositories/product_repository.dart
 import 'dart:io';
 
 import '../models/product_model.dart';
@@ -10,7 +9,7 @@ abstract class ProductRepository {
   Future<Result<ProductModel>> saveFlower({
     required String name,
     required String description,
-    required int cityId,
+    required int shopId,
     required double price,
     required bool available,
     required File image,

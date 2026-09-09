@@ -40,40 +40,48 @@ class FlowerViewSet(viewsets.ModelViewSet):
         print("SHOP ID:", shop.id)
         print("SHOP TYPE:", shop.shop_type)
         print("SHOP SELLER ID:", shop.seller_id)
+
         with transaction.atomic():
-            # Seller qatorini lock qilamiz - parallel so'rovlar
-            # bitta paid_product_slot'ni ikki marta ishlatib qo'ymasligi uchun
             seller = Seller.objects.select_for_update().get(pk=shop.seller_id)
+
             print("SELLER ID:", seller.id)
             print("PREMIUM:", seller.is_premium)
             print("PAID SLOTS:", seller.paid_product_slots)
+
             if seller.is_premium:
                 print(">>> PREMIUM SAVE")
                 serializer.save()
+                print(">>> PRODUCT SAVED")
                 return
 
             if shop.shop_type == "business":
-                # Business uchun bepul reklama yo'q - darhol slot yoki premium kerak
-                print(">>>Business: Consumer slot")
+                print(">>> BUSINESS")
                 self._consume_slot_or_raise(seller)
             else:
-                # Personal - avval bepul limitni tekshiramiz
                 config = ProductPricingConfig.get_solo()
+
                 used = ProductModel.objects.filter(
-                    shop__seller=seller, shop__shop_type="personal"
+                    shop__seller=seller,
+                    shop__shop_type="personal"
                 ).count()
+
                 print(">>> PERSONAL")
                 print("USED:", used)
                 print("FREE LIMIT:", config.free_product_limit)
 
                 if used >= config.free_product_limit:
+                    print(">>> FREE LIMIT REACHED")
                     self._consume_slot_or_raise(seller)
+
+            print(">>> BEFORE SERIALIZER SAVE")
 
             serializer.save()
 
+            print(">>> PRODUCT SAVED")
+            
     def _consume_slot_or_raise(self, seller):
         if seller.paid_product_slots > 0:
             seller.paid_product_slots -= 1
             seller.save(update_fields=["paid_product_slots"])
         else:
-            raise ProductLimitReached()
+            raise ProductLimitReached() 

@@ -15,8 +15,40 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductModel
-        exclude = ["image"]
-        read_only_fields = ["id", "updated_at", "created_at"]
+        fields = [
+            "id",
+            "name",
+            "description",
+            "image",       # <-- yozish uchun kerak
+            "image_url",   # <-- o'qish uchun
+            "shop",
+            "shop_name",
+            "shop_type",
+            "city_name",
+            "seller",
+            "seller_name",
+            "seller_is_premium",
+            "available",
+            "created_at",
+            "updated_at",
+            "price",
+            "old_price",
+            "discount_percent",
+            "rating_avg",
+            "review_count",
+            "sold_count",
+            "view_count",
+            "is_original",
+            "status",
+            "is_favourited",
+        ]
+        read_only_fields = [
+            "id", "created_at", "updated_at",
+            "rating_avg", "review_count", "sold_count", "view_count",
+        ]
+        extra_kwargs = {
+            "image": {"write_only": True},
+        }
 
     def get_image_url(self, obj):
         request = self.context.get("request")

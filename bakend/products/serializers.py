@@ -2,15 +2,16 @@ from rest_framework import serializers
 from .models import ProductModel
 from shop.models import Shop
 
-
 class ProductSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
     is_favourited = serializers.SerializerMethodField()
+    seller_name = serializers.SerializerMethodField()
 
     shop_name = serializers.CharField(source="shop.name", read_only=True)
     shop_type = serializers.CharField(source="shop.shop_type", read_only=True)
     city_name = serializers.CharField(source="shop.city.name", read_only=True)
     seller_is_premium = serializers.BooleanField(source="shop.seller.is_premium", read_only=True)
+    seller = serializers.IntegerField(source="shop.seller.id", read_only=True)
 
     class Meta:
         model = ProductModel
@@ -26,16 +27,17 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_is_favourited(self, obj):
         if hasattr(obj, "is_fav_annotated"):
             return obj.is_fav_annotated
-
         request = self.context.get("request")
         if not request or not request.user.is_authenticated:
             return False
         return obj.favourited_by.filter(user=request.user).exists()
 
+    def get_seller_name(self, obj):
+        user = obj.shop.seller.user
+        full_name = user.get_full_name()
+        return full_name if full_name else user.get_username()
+
     def validate_shop(self, shop):
-        """
-        Faqat o'zining shopiga product qo'sha olishi kerak.
-        """
         request = self.context.get("request")
         if shop.seller.user != request.user:
             raise serializers.ValidationError("Bu do'kon sizga tegishli emas.")

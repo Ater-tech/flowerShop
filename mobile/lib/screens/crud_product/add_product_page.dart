@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/error_handler/error_result.dart';
 import 'package:mobile/error_handler/failure.dart';
-import 'package:mobile/providers/product_repo_providers.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/models/shop_model.dart';
+import 'package:mobile/controllers/product_controller.dart';
 
 class AddProductPage extends ConsumerStatefulWidget {
   final  ShopModel shop;
@@ -96,8 +96,8 @@ class _AddState extends ConsumerState<AddProductPage> {
           setState(() => isLoading = true);
 
           final result = await ref
-              .read(productRepositoryProvider)
-              .saveFlower(
+              .read(productControllerProvider.notifier)
+              .add(
                 name: _nameController.text,
                 description: _descriptionController.text,
                 shopId: widget.shop.id!,

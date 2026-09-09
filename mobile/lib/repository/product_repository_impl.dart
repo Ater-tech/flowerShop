@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mobile/error_handler/failure.dart';
 import 'package:mobile/server/api_endpoints.dart';
 import '../models/product_model.dart';
@@ -66,12 +67,18 @@ class ProductRepositoryImpl implements ProductRepository {
           filename: image.path.split(Platform.pathSeparator).last,
         ),
       });
-
+        
       final response = await dio.post(ApiEndpoints.flowers, data: formData);
 
       return Success(ProductModel.fromJson(response.data));
     } on DioException catch (e) {
       // 402 — maxsus holat: limit tugagan, paywall ko'rsatish kerak
+      debugPrint("========== SAVE FLOWER ERROR ==========");
+      debugPrint("STATUS: ${e.response?.statusCode}");
+      debugPrint("DATA: ${e.response?.data}");
+      debugPrint("ERROR: ${e.message}");
+      debugPrint("======================================");
+
       if (e.response?.statusCode == 402) {
         final data = e.response?.data as Map<String, dynamic>?;
         return Error(

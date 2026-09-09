@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:mobile/repository/token_repository.dart';
 import 'package:mobile/storage/token_storage.dart';
 
@@ -17,6 +18,12 @@ class AuthInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     final token = await storage.getAccessToken();
+    debugPrint("========== AUTH INTERCEPTOR ==========");
+    debugPrint("URL: ${options.uri}");
+    debugPrint("METHOD: ${options.method}");
+    debugPrint("TOKEN EXISTS: ${token != null}");
+    debugPrint("TOKEN LENGTH: ${token?.length}");
+    debugPrint("======================================");
     if (token != null) {
       options.headers["Authorization"] = "Bearer $token";
     }
@@ -30,6 +37,12 @@ class AuthInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     // 401
+      debugPrint("========== REAL 401 ==========");
+      debugPrint("URL: ${err.requestOptions.uri}");
+      debugPrint("STATUS: ${err.response?.statusCode}");
+      debugPrint("DATA: ${err.response?.data}");
+      debugPrint("HEADERS: ${err.response?.headers}");
+      debugPrint("===============================");
     if (err.response?.statusCode != 401) {
       return handler.next(err);
     }
@@ -48,9 +61,12 @@ class AuthInterceptor extends Interceptor {
       }
       options.headers["Authorization"] = "Bearer $token";
       options.extra["retry"] = true;
-      final response = await api.fetch(options);
-        
-      handler.resolve(response);
+      try {
+        final response = await api.fetch(options);
+        return handler.resolve(response);
+        } on DioException catch(e){
+          return handler.next(e);
+        }
     }
 
     _refreshCompleter = Completer<String?>();

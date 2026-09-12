@@ -1,18 +1,19 @@
 from rest_framework import serializers
 from .models import Shop
-
+from seller.serializers import SellerSerializer
 
 class ShopSerializer(serializers.ModelSerializer):
     city_name = serializers.CharField(source='city.name', read_only=True)
-    # total_sold = serializers.IntegerField(read_only=True)   # annotate orqali keladi
-    # product_count = serializers.IntegerField(read_only=True)  # annotate orqali keladi
+    total_sold = serializers.IntegerField(read_only=True)   # annotate orqali keladi
+    product_count = serializers.IntegerField(read_only=True)  # annotate orqali keladi
     name = serializers.CharField(required=False, allow_blank=True)
-    
+    seller = SellerSerializer(read_only=True)
     class Meta:
         model = Shop
         fields = [
             'id', 'shop_type', 'name', 'address', 'city', 'city_name',
             'latitude', 'longitude', 'is_default',
+            'seller', 'total_sold', 'product_count',
         ]
         # fields = [
         #     'id', 'shop_type', 'name', 'address', 'city', 'city_name',

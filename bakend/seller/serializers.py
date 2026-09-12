@@ -3,6 +3,8 @@ from .models import Seller
 
 
 class SellerSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+    phone_number = serializers.SerializerMethodField()
     class Meta:
         model = Seller
         fields = [
@@ -22,3 +24,9 @@ class SellerSerializer(serializers.ModelSerializer):
                     "Siz allaqachon sotuvchi profiliga egasiz."
                 )
         return attrs
+    
+    def get_full_name(self, obj):
+        return obj.user.get_full_name() or obj.user.username
+
+    def get_phone_number(self, obj):
+        return getattr(obj.user, "phone_number", None)

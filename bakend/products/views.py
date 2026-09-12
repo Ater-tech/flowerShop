@@ -36,26 +36,26 @@ class FlowerViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         shop = serializer.validated_data["shop"]
 
-        print("========== FLOWER CREATE ==========")
-        print("SHOP ID:", shop.id)
-        print("SHOP TYPE:", shop.shop_type)
-        print("SHOP SELLER ID:", shop.seller_id)
+        # print("========== FLOWER CREATE ==========")
+        # print("SHOP ID:", shop.id)
+        # print("SHOP TYPE:", shop.shop_type)
+        # print("SHOP SELLER ID:", shop.seller_id)
 
         with transaction.atomic():
             seller = Seller.objects.select_for_update().get(pk=shop.seller_id)
 
-            print("SELLER ID:", seller.id)
-            print("PREMIUM:", seller.is_premium)
-            print("PAID SLOTS:", seller.paid_product_slots)
+            # print("SELLER ID:", seller.id)
+            # print("PREMIUM:", seller.is_premium)
+            # print("PAID SLOTS:", seller.paid_product_slots)
 
             if seller.is_premium:
-                print(">>> PREMIUM SAVE")
+                # print(">>> PREMIUM SAVE")
                 serializer.save()
-                print(">>> PRODUCT SAVED")
+                # print(">>> PRODUCT SAVED")
                 return
 
             if shop.shop_type == "business":
-                print(">>> BUSINESS")
+                # print(">>> BUSINESS")
                 self._consume_slot_or_raise(seller)
             else:
                 config = ProductPricingConfig.get_solo()
@@ -65,19 +65,19 @@ class FlowerViewSet(viewsets.ModelViewSet):
                     shop__shop_type="personal"
                 ).count()
 
-                print(">>> PERSONAL")
-                print("USED:", used)
-                print("FREE LIMIT:", config.free_product_limit)
+                # print(">>> PERSONAL")
+                # print("USED:", used)
+                # print("FREE LIMIT:", config.free_product_limit)
 
                 if used >= config.free_product_limit:
-                    print(">>> FREE LIMIT REACHED")
+                    # print(">>> FREE LIMIT REACHED")
                     self._consume_slot_or_raise(seller)
 
-            print(">>> BEFORE SERIALIZER SAVE")
+            # print(">>> BEFORE SERIALIZER SAVE")
 
             serializer.save()
 
-            print(">>> PRODUCT SAVED")
+            # print(">>> PRODUCT SAVED")
             
     def _consume_slot_or_raise(self, seller):
         if seller.paid_product_slots > 0:

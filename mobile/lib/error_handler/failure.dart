@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 sealed class Failure {
   final String message;
   const Failure(this.message);
@@ -16,8 +18,27 @@ class EmailAlreadyExistsFailure extends Failure {
     : super("Bu email allaqachon ro'yxatdan o'tgan");
 }
 
+// failure.dart ichida, NetworkFailure klassiga qo'shiladi
 class NetworkFailure extends Failure {
-  const NetworkFailure() : super("Internet aloqasini tekshiring");
+  const NetworkFailure(this.message) : super('');
+  @override
+  // ignore: overridden_fields
+  final String message;
+  
+
+  factory NetworkFailure.fromDioException(DioException e) {
+    return switch (e.type) {
+      DioExceptionType.connectionTimeout ||
+      DioExceptionType.sendTimeout ||
+      DioExceptionType.receiveTimeout =>
+        const NetworkFailure('Ulanish vaqti tugadi'),
+      DioExceptionType.connectionError =>
+        const NetworkFailure('Internet aloqasi yo\'q'),
+      DioExceptionType.badResponse =>
+        NetworkFailure('Server xatosi: ${e.response?.statusCode}'),
+      _ => NetworkFailure(e.message ?? 'Noma\'lum xatolik'),
+    };
+  }
 }
 
 class ServerFailure extends Failure {

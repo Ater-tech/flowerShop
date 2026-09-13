@@ -17,7 +17,7 @@ class AddProductEntryPage extends ConsumerStatefulWidget {
 }
 
 class _AddProductEntryPageState extends ConsumerState<AddProductEntryPage> {
-  int? _selectedShopId;
+  // int? _selectedShopId;
 
   @override
   Widget build(BuildContext context) {

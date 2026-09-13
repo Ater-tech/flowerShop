@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/repository/auth_reprository.dart';
 import 'package:mobile/repository/city_repository.dart';
 import 'package:mobile/repository/product_repository.dart';
+import 'package:mobile/repository/review_repository.dart';
 import 'package:mobile/repository/token_repository.dart';
 import 'package:mobile/storage/token_storage.dart';
 import 'package:mobile/repository/user_repository.dart';
@@ -30,4 +31,8 @@ final cityRepositoryProvider = Provider<CityRepository>(
 
 final productRepoProvider = Provider<ProductRepository>(
   (ref) => ref.watch(apiProvider).productRepositoryImpl,
+);
+
+final reviewRepositoryProvider = Provider<ReviewRepository>(
+  (ref) => ref.watch(apiProvider).reviewRepositoryImpl,
 );

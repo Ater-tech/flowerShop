@@ -1,4 +1,4 @@
-  import 'package:flutter/foundation.dart';
+  // import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
   import 'dart:io';
   import 'package:mobile/error_handler/error_result.dart';
@@ -11,9 +11,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
   class ProductController extends AsyncNotifier<List<ProductModel>> {
     @override
     Future<List<ProductModel>> build() async {
-      debugPrint("========== PRODUCT CONTROLLER BUILD ==========");
-      debugPrint("TIME: ${DateTime.now()}");
-      debugPrint("===============================================");
+      // debugPrint("========== PRODUCT CONTROLLER BUILD ==========");
+      // debugPrint("TIME: ${DateTime.now()}");
+      // debugPrint("===============================================");
       final repo = ref.read(productRepositoryProvider);
       final query = ref.read(effectiveQueryProvider); // sizdagi mavjud query provider
 

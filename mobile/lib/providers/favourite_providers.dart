@@ -1,7 +1,9 @@
 // favourites/application/favourite_providers.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:mobile/providers/product_detail_provider.dart';
 import 'package:mobile/providers/repo_providers.dart';
+import 'package:mobile/server/api_endpoints.dart';
 import 'product_search_providers.dart';
 // import '../../../core/network/api_main_service_provider.dart';
 
@@ -23,17 +25,18 @@ class FavouriteController extends Notifier<void> {
     try {
       final apiService = ref.read(apiProvider);
       await apiService.dio.post(
-        "/api/favourites/toggle/",
+        ApiEndpoints.favToggle,
         data: {"flower": productId},
       );
 
       // Server javobi kelgach, ro'yxatni serverdan qayta so'raymiz
       ref.invalidate(productListProvider);
-      await ref.read(productListProvider.future);
+      // await ref.read(productListProvider.future); 
+      ref.invalidate(productDetailProvider(productId));
     } finally {
       pendingIds.update((state) => {...state}..remove(productId));
     }
-  }
+  } 
 }
 
 final favouriteControllerProvider = NotifierProvider<FavouriteController, void>(

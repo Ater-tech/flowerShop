@@ -1,3 +1,5 @@
+import 'package:mobile/models/seller_model.dart';
+
 enum ShopType { personal, business }
 
 extension ShopTypeX on ShopType {
@@ -19,7 +21,7 @@ class ShopModel {
   final bool isDefault;
   final int totalSold;
   final int productCount;
-
+  final SellerModel? seller;
   const ShopModel({
     this.id,
     required this.shopType,
@@ -32,6 +34,7 @@ class ShopModel {
     this.isDefault = false,
     this.totalSold = 0,
     this.productCount = 0,
+    this.seller,
   });
 
   factory ShopModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +50,9 @@ class ShopModel {
       isDefault: json['is_default'] as bool? ?? false,
       totalSold: json['total_sold'] as int? ?? 0,
       productCount: json['product_count'] as int? ?? 0,
+      seller: json['seller'] != null
+        ?SellerModel.fromJson(json['seller'] as Map<String, dynamic>)
+        :null,
     );
   }
 

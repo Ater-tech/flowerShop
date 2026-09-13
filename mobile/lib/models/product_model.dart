@@ -12,7 +12,7 @@ class ProductModel {
 
   final double price;
   final double? oldPrice;
-  final int discountPercent;
+  final int? discountPercent;
 
   final int sellerId;
   final String sellerName;
@@ -64,7 +64,7 @@ class ProductModel {
       oldPrice: data['old_price'] == null
           ? null
           : _parseDouble(data['old_price']),
-      discountPercent: data['discount_percent'] ?? 0,
+      discountPercent: data['discount_percent'],
       sellerId: data['seller'] as int,
       sellerName: _checkString(data['seller_name']),
       sellerIsPremium: data['seller_is_premium'] ?? false,

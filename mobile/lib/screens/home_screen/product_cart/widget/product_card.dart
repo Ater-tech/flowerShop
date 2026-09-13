@@ -80,9 +80,9 @@ class ProductCard extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      if (product.discountPercent > 0) ...[
+                      if (product.discountPercent! > 0) ...[
                         const SizedBox(width: 6),
-                        DiscountBadge(percent: product.discountPercent),
+                        DiscountBadge(percent: product.discountPercent??0),
                       ],
                     ],
                   ),

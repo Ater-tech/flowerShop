@@ -7,7 +7,7 @@ Failure mapDioExceptionToFailure(DioException e) {
     case DioExceptionType.sendTimeout:
     case DioExceptionType.receiveTimeout:
     case DioExceptionType.connectionError:
-      return const NetworkFailure();
+      return const NetworkFailure("Networkda xatolik");
 
     case DioExceptionType.cancel:
       return const CancelledFailure();
@@ -23,6 +23,6 @@ Failure mapDioExceptionToFailure(DioException e) {
 
     case DioExceptionType.badCertificate:
     case DioExceptionType.unknown:
-      return const NetworkFailure();
+      return const NetworkFailure("Network xatoligi 2 ");
   }
 }

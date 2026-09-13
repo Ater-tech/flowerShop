@@ -40,6 +40,16 @@ class ProductRepositoryImpl implements ProductRepository {
     }
   }
 
+  @override    
+  Future<Result<ProductModel>> fetchProductDetail(int id) async {
+    try {
+      final response = await dio.get('/products/$id/');
+      return Success(ProductModel.fromJson(response.data));
+    } on DioException catch (e) {
+      return Error(NetworkFailure.fromDioException(e));
+    }
+  }
+
   @override
   Future<Result<ProductModel>> saveFlower({
     required String name,

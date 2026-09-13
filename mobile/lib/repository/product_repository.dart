@@ -6,6 +6,7 @@ import '../error_handler/error_result.dart'; // sizdagi Result<T> / Failure
 
 abstract class ProductRepository {
   Future<Result<List<ProductModel>>> fetchProducts(ProductQuery query);
+  Future<Result<ProductModel>> fetchProductDetail(int id);
   Future<Result<ProductModel>> saveFlower({
     required String name,
     required String description,

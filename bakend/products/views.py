@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, filters
 from django.db import transaction
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import ProductModel, ProductPricingConfig
@@ -8,6 +8,9 @@ from .serializers import ProductSerializer
 from .exceptions import ProductLimitReached
 from favourites.models import Favourite
 from seller.models import Seller
+from django.utils import timezone
+from datetime import timedelta
+
 
 class FlowerViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
@@ -18,8 +21,18 @@ class FlowerViewSet(viewsets.ModelViewSet):
     filterset_fields = ["shop", "shop__city", "shop__shop_type"]
 
     def get_queryset(self):
-        qs = ProductModel.objects.select_related("shop", "shop__city", "shop__seller").order_by("-created_at")
-
+        qs = ProductModel.objects.select_related("shop", "shop__city", "shop__seller"
+                                                 ).order_by("-created_at")
+        
+        week_ago = timezone.now() - timedelta(days=7)
+        qs = qs.annotate(
+            weekly_sold_count = Count(
+                "sale_logs",
+                filter=Q(sale_logs__sold_at__gte=week_ago),
+                distinct=True,
+            )
+        )
+        
         premium_only = self.request.query_params.get("premium_sellers")
         if premium_only == "true":
             qs = qs.filter(shop__seller__is_premium=True)
@@ -85,3 +98,4 @@ class FlowerViewSet(viewsets.ModelViewSet):
             seller.save(update_fields=["paid_product_slots"])
         else:
             raise ProductLimitReached() 
+        

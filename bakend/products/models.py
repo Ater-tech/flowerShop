@@ -64,3 +64,21 @@ class ProductPricingConfig(models.Model):
 
     def __str__(self):
         return "Mahsulot narxlash sozlamalari"
+
+class ProductSaleLog(models.Model):
+    product = models.ForeignKey(
+        ProductModel,
+        on_delete=models.CASCADE,
+        related_name='sale_logs'
+    )
+    quantity = models.PositiveIntegerField(default=1)
+    sold_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['product', 'sold_at']),
+        ]
+        ordering = ['-sold_at']
+
+    def __str__(self):
+        return f"{self.product_id} — {self.quantity} dona ({self.sold_at:%Y-%m-%d})"

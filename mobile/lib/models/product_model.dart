@@ -1,3 +1,5 @@
+import 'package:mobile/models/shop_model.dart';
+
 class ProductModel {
   final int id;
   final String name;
@@ -24,6 +26,7 @@ class ProductModel {
   final int viewCount;
   final bool isOriginal;
   final bool isFavourited;
+  final ShopModel shop;
 
   const ProductModel({
     required this.id,
@@ -47,6 +50,7 @@ class ProductModel {
     required this.viewCount,
     required this.isOriginal,
     required this.isFavourited,
+    required this.shop,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> data) {
@@ -74,6 +78,7 @@ class ProductModel {
       viewCount: data['view_count'] ?? 0,
       isOriginal: data['is_original'] ?? false,
       isFavourited: data['is_favourited'] ?? false,
+      shop: data['shop'],
     );
   }
 

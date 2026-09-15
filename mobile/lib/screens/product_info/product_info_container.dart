@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/product_model.dart';
+import 'package:mobile/screens/product_info/description_section.dart';
 import 'package:mobile/screens/product_info/reviews_preview_section.dart';
 import 'package:mobile/screens/product_info/seller_stat.dart';
 import 'package:mobile/screens/product_info/smilar_shop_boutique.dart';

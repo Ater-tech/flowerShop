@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/product_model.dart';
+import 'package:mobile/screens/product_info/delevery_info_section.dart';
 import 'package:mobile/screens/product_info/description_section.dart';
 import 'package:mobile/screens/product_info/reviews_preview_section.dart';
 import 'package:mobile/screens/product_info/seller_stat.dart';
@@ -30,7 +31,7 @@ class ProductInfoContainer extends StatelessWidget {
           const SizedBox(height: 20),
           DescriptionSection(description: product.description),
           const SizedBox(height: 20),
-          const DeliveryInfoSection(),
+          DeliveryInfoSection(shop: product.shop),
           const SizedBox(height: 20),
           ReviewsPreviewSection(productId: product.id),
           const SizedBox(height: 20),

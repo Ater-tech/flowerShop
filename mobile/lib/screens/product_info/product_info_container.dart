@@ -5,6 +5,7 @@ import 'package:mobile/screens/product_info/description_section.dart';
 import 'package:mobile/screens/product_info/reviews_preview_section.dart';
 import 'package:mobile/screens/product_info/seller_stat.dart';
 import 'package:mobile/screens/product_info/smilar_shop_boutique.dart';
+import 'package:mobile/screens/product_info/weekly_sales_section.dart';
 
 class ProductInfoContainer extends StatelessWidget {
   const ProductInfoContainer({super.key, required this.product});

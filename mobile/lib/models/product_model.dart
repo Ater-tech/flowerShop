@@ -23,6 +23,7 @@ class ProductModel {
   final double ratingAvg;
   final int reviewCount;
   final int soldCount;
+  final int weeklySoldCount;
   final int viewCount;
   final bool isOriginal;
   final bool isFavourited;
@@ -47,6 +48,7 @@ class ProductModel {
     required this.ratingAvg,
     required this.reviewCount,
     required this.soldCount,
+    required this.weeklySoldCount,
     required this.viewCount,
     required this.isOriginal,
     required this.isFavourited,
@@ -75,10 +77,11 @@ class ProductModel {
       ratingAvg: _parseDouble(data['rating_avg']),
       reviewCount: data['review_count'] ?? 0,
       soldCount: data['sold_count'] ?? 0,
+      weeklySoldCount: data['weekly_sold_count'] ?? 0,
       viewCount: data['view_count'] ?? 0,
       isOriginal: data['is_original'] ?? false,
       isFavourited: data['is_favourited'] ?? false,
-      shop: data['shop'],
+      shop: ShopModel.fromJson(data['shop']),
     );
   }
 

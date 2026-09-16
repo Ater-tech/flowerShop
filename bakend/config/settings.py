@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'seller',
     'shop',
     'reviews',
+    'django_filters',
     'rest_framework',
     'rest_framework_simplejwt',
 

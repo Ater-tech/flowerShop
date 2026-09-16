@@ -5,10 +5,10 @@ class DescriptionSection extends StatefulWidget {
   final String description;
 
   @override
-  State<DescriptionSection> createState() => _DescriptionSectionState();
+  State<DescriptionSection> createState() => DescriptionSectionState();
 }
 
-class DescriptionSectionState extends State<_DescriptionSection> {
+class DescriptionSectionState extends State<DescriptionSection> {
   bool _expanded = false;
   bool _hasOverflow = false;
 

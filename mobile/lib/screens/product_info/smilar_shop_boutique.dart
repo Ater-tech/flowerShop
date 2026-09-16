@@ -22,7 +22,7 @@ class SimilarShopBouquetsSection extends ConsumerWidget {
             AsyncData(:final value) => ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: value.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (context, i) => ProductCard(product: value[i]),
               ),
             _ => const Center(child: CircularProgressIndicator()),

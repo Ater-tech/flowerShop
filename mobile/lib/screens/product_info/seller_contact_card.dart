@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/seller_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SellerContactCard extends StatelessWidget {
   const SellerContactCard({super.key, required this.seller});

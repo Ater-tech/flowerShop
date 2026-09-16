@@ -36,7 +36,11 @@ class FlowerViewSet(viewsets.ModelViewSet):
         premium_only = self.request.query_params.get("premium_sellers")
         if premium_only == "true":
             qs = qs.filter(shop__seller__is_premium=True)
-
+        
+        exclude_id = self.request.query_params.get("exclude")
+        if exclude_id:
+            qs = qs.exclude(pk=exclude_id)
+        
         user = self.request.user
         if user.is_authenticated:
             qs = qs.annotate(

@@ -9,6 +9,7 @@ class SellerSerializer(serializers.ModelSerializer):
         model = Seller
         fields = [
             "id", "rating_avg",
+            "phone_number",
             "is_premium", "premium_expires_at", "created_at",
         ]
         read_only_fields = [

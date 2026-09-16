@@ -22,7 +22,7 @@ class DeliveryInfoSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Yetkazib berish: ${shop.cityName ?? "Noma\'lum shahar"}',
+                  'Yetkazib berish: ${shop.cityName ?? "Noma'lum shahar"}',
                   style: Theme.of(
                     context,
                   ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),

@@ -15,4 +15,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
     
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data)
+        Seller.objects.create(user=user)
+        return user

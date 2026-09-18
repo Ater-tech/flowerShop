@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import ProductModel
 from shop.models import Shop
+from shop.serializers import ShopSerializer
+from shop.serializers import ShopMinimalSerializer
 
 class ProductSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
@@ -74,3 +76,8 @@ class ProductSerializer(serializers.ModelSerializer):
         if shop.seller.user != request.user:
             raise serializers.ValidationError("Bu do'kon sizga tegishli emas.")
         return shop
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["shop"] = ShopSerializer(instance.shop, context=self.context).data
+        return rep

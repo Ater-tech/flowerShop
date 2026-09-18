@@ -81,7 +81,19 @@ class ProductModel {
       viewCount: data['view_count'] ?? 0,
       isOriginal: data['is_original'] ?? false,
       isFavourited: data['is_favourited'] ?? false,
-      shop: ShopModel.fromJson(data['shop']),
+      shop: data['shop'] is Map<String, dynamic>
+    ? ShopModel.fromJson(data['shop'])
+    : ShopModel(
+        id: data['shop'] as int,
+        name: data['shop_name'] ?? '',
+        shopType: data['shop_type'] ?? '',
+        address: data['address'] ?? '',
+        cityId: data['cityId'] as int,
+        cityName: data['cityName'] ?? '',
+        latitude: data['latitude'] as double,
+        longitude: data['longitude'] as double,  
+        // ShopModel'dagi boshqa majburiy maydonlar shu yerga
+      ),
     );
   }
 

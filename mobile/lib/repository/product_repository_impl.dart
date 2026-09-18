@@ -40,7 +40,7 @@ class ProductRepositoryImpl implements ProductRepository {
     }
   }
 
-  @override    
+  @override
   Future<Result<ProductModel>> fetchProductDetail(int id) async {
     try {
       final response = await dio.get('/products/$id/');
@@ -77,9 +77,9 @@ class ProductRepositoryImpl implements ProductRepository {
           filename: image.path.split(Platform.pathSeparator).last,
         ),
       });
-        
-      final response = await dio.post(ApiEndpoints.flowers, data: formData);
 
+      final response = await dio.post(ApiEndpoints.flowers, data: formData);
+      debugPrint("RAW RESPONSE: ${response.data}");
       return Success(ProductModel.fromJson(response.data));
     } on DioException catch (e) {
       // 402 — maxsus holat: limit tugagan, paywall ko'rsatish kerak
@@ -110,6 +110,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
       return Error(mapDioExceptionToFailure(e));
     } catch (e) {
+      debugPrint("SAVE FLOWER PARSE ERROR: $e");
       return const Error(UnknownFailure());
     }
   }

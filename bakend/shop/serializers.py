@@ -30,3 +30,14 @@ class ShopSerializer(serializers.ModelSerializer):
                 {'name': "Rasmiy do'kon uchun nom majburiy"}
             )
         return attrs
+
+class ShopMinimalSerializer(serializers.ModelSerializer):
+    city_name = serializers.CharField(source='city.name', read_only=True)
+    seller = SellerSerializer(read_only=True)
+
+    class Meta:
+        model = Shop
+        fields = [
+            'id', 'shop_type', 'name', 'address', 'city', 'city_name',
+            'latitude', 'longitude', 'is_default', 'seller',
+        ]

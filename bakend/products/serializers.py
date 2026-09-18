@@ -8,7 +8,8 @@ class ProductSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
     is_favourited = serializers.SerializerMethodField()
     seller_name = serializers.SerializerMethodField()
-
+    weekly_sold_count = serializers.IntegerField(read_only = True, default=0)
+    
     shop_name = serializers.CharField(source="shop.name", read_only=True)
     shop_type = serializers.CharField(source="shop.shop_type", read_only=True)
     city_name = serializers.CharField(source="shop.city.name", read_only=True)
@@ -43,6 +44,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "is_original",
             "status",
             "is_favourited",
+            "weekly_sold_count",
         ]
         read_only_fields = [
             "id", "created_at", "updated_at",
@@ -79,5 +81,5 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["shop"] = ShopSerializer(instance.shop, context=self.context).data
+        rep["shop"] = ShopMinimalSerializer(instance.shop, context=self.context).data
         return rep

@@ -21,7 +21,7 @@ class FlowerViewSet(viewsets.ModelViewSet):
     filterset_fields = ["shop", "shop__city", "shop__shop_type"]
 
     def get_queryset(self):
-        qs = ProductModel.objects.select_related("shop", "shop__city", "shop__seller"
+        qs = ProductModel.objects.select_related("shop", "shop__city", "shop__seller", "shop__seller__user",
                                                  ).order_by("-created_at")
         
         week_ago = timezone.now() - timedelta(days=7)

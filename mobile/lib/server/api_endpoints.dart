@@ -16,6 +16,7 @@ class ApiEndpoints {
   static const sellerMe = '/api/sellers/me/';
   static const sellers = '/api/sellers/';
   static const products = '/api/products/';
+  static const reviews = '/api/reviews/';
   static const favToggle = "/api/favourites/toggle/";
   
 }

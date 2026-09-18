@@ -43,7 +43,7 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<Result<ProductModel>> fetchProductDetail(int id) async {
     try {
-      final response = await dio.get('/products/$id/');
+      final response = await dio.get('${ApiEndpoints.flowers}$id/');
       return Success(ProductModel.fromJson(response.data));
     } on DioException catch (e) {
       return Error(NetworkFailure.fromDioException(e));

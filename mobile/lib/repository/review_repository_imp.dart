@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:mobile/error_handler/error_result.dart';
 import 'package:mobile/error_handler/failure.dart';
 import 'package:mobile/models/review_model.dart';
-
+import 'package:mobile/server/api_endpoints.dart';
 import 'review_repository.dart';
 class ReviewRepositoryImpl implements ReviewRepository {
   final Dio dio;
@@ -15,7 +15,7 @@ class ReviewRepositoryImpl implements ReviewRepository {
   }) async {
     try {
       final response = await dio.get(
-        '/reviews/',
+        ApiEndpoints.reviews,
         queryParameters: {'product': productId, 'page_size': pageSize},
       );
       final results = response.data['results'] as List;

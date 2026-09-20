@@ -18,5 +18,6 @@ class ApiEndpoints {
   static const products = '/api/products/';
   static const reviews = '/api/reviews/';
   static const favToggle = "/api/favourites/toggle/";
-  
-}
+  static const recommendedPath = '/api/product/discover/recommended/';
+  static const popularPath = '/api/product/discover/popular/';
+} 

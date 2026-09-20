@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/providers/product_search_providers.dart';
 import 'package:mobile/screens/home_screen/search/widget/product_text_field.dart';
 
 class SearchBarWidget extends ConsumerStatefulWidget {
@@ -11,6 +12,8 @@ class SearchBarWidget extends ConsumerStatefulWidget {
 
 class _SearchBarState extends ConsumerState<SearchBarWidget> {
   late final TextEditingController nameController;
+  
+  
   @override
   void initState(){
     super.initState();
@@ -25,6 +28,14 @@ class _SearchBarState extends ConsumerState<SearchBarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<String>(rawSearchInputProvider, (prev, next) {
+    if (nameController.text != next) {           // tsikl bo'lmasligi uchun tekshiruv
+      nameController.value = TextEditingValue(
+        text: next,
+        selection: TextSelection.collapsed(offset: next.length), // kursor oxirida
+      );
+    }
+  });
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(

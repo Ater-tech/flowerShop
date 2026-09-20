@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:mobile/server/api_endpoints.dart';
 
 class SearchDiscoverRemoteDataSource {
   SearchDiscoverRemoteDataSource(this._dio);
   final Dio _dio;
 
-  // TODO: backend URL'lariga moslang
-  static const recommendedPath = 'products/discover/recommended/';
-  static const popularPath = 'products/discover/popular/';
+  
+  static const recommendedPath = ApiEndpoints.recommendedPath;
+  static const popularPath = ApiEndpoints.popularPath;
 
   Future<List<Map<String, dynamic>>> fetch(String path, {required int limit}) async {
     final res = await _dio.get<dynamic>(path, queryParameters: {'limit': limit});

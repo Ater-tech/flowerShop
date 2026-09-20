@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:mobile/providers/repo_providers.dart'; // apiProvider
@@ -62,6 +63,8 @@ extension _CacheFor on Ref {
 }
 
 final recommendedProductsProvider = FutureProvider.autoDispose<List<ProductModel>>((ref) async {
+  debugPrint('[discover] recommended BUILD');
+   ref.onDispose(() => debugPrint('[discover] recommended DISPOSE'));
   ref.cacheFor(const Duration(minutes: 2));
   return switch (await ref.watch(searchDiscoverRepositoryProvider).getRecommended()) {
     Success(:final data) => data,

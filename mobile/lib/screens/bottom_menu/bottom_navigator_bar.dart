@@ -35,8 +35,8 @@ class HomeBottomNavBar extends ConsumerWidget {
           activeIcon: Icon(Icons.home),
           label: 'Bosh sahifa',
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Xabarlar'),
-        BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Sell'),
+        BottomNavigationBarItem(icon: Icon(Icons.inventory_2_outlined), label: 'Buyurtmalar'),
+        BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Soting'),
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_bag_outlined),
           label: 'Savat',

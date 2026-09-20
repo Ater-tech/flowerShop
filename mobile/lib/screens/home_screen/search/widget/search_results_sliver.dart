@@ -13,7 +13,7 @@ class SearchResultsSliver extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // productListProvider: rawSearchInput → debouncer → effectiveQuery zanjiridan
-    // keladi. List<ProductModel> qaytaradi deb taxmin qilindi.
+    // keladi. List<ProductModel> qaytaradi.
     return ref.watch(productListProvider).when(
           loading: () => const SliverFillRemaining(
             hasScrollBody: false,

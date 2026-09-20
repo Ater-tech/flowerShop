@@ -15,7 +15,7 @@ def _active_promotions():
 
 def _base_queryset():
     # TODO: Flutter'dagi ProductModel shop'ni ichida kutadi -> select_related('shop')
-    return Product.objects.select_related("shop")  # + .filter(is_active=True), agar bor bo'lsa
+    return ProductModel.objects.select_related("shop")  # + .filter(is_active=True), agar bor bo'lsa
 
 
 def annotate_card_fields(qs):

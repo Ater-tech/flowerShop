@@ -27,13 +27,15 @@ class _SearchState extends ConsumerState<SearchPage> {
       ),
       child: Scaffold(
         backgroundColor: const Color(0xFFFAFAFA),
-        body: SafeArea(bottom: false, child: CustomScrollView(
+        body: SafeArea(
+          bottom: false, 
+          child: CustomScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           slivers: [
             const SliverToBoxAdapter(child: SearchBarWidget(),),
             if(isTyping) const SearchResultsSliver()
-            else 
-            SliverToBoxAdapter(child: SearchHistorySection(
+            else  ...
+            [SliverToBoxAdapter(child: SearchHistorySection(
               onSelected: (query){
               ref.read(rawSearchInputProvider.notifier).state = query;
               ref.read(searchHistoryControllerProvider.notifier).add(query);
@@ -42,7 +44,7 @@ class _SearchState extends ConsumerState<SearchPage> {
               } 
               ),),
              const SliverToBoxAdapter(child: DiscoverSection()),
- 
+ ]            ,
               const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
         ),

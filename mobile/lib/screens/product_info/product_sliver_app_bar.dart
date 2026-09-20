@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/models/product_model.dart';
@@ -12,7 +13,10 @@ class ProductSliverAppBar extends ConsumerWidget {
     return SliverAppBar(
       pinned: true,
       expandedHeight: 380,
-      leading: const _CircleIconButton(icon: Icons.arrow_back),
+      leading: _CircleIconButton(
+        icon: Icons.arrow_back, 
+        onTap: ()=> Navigator.pop(context),
+        ),
       actions: [
         _CircleIconButton(
           icon: product.isFavourited ? Icons.favorite : Icons.favorite_border,
@@ -34,9 +38,19 @@ class ProductSliverAppBar extends ConsumerWidget {
           tag: 'product-image-${product.id}',
           child: PageView.builder(
             itemCount: product.imageUrl.length,
-            itemBuilder: (context, index) => Image.network(
-              product.imageUrl[index],
+            itemBuilder: (context, index) => CachedNetworkImage(
+              imageUrl: product.imageUrl[index],
               fit: BoxFit.cover,
+              placeholder: (context, url){
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );                
+              },
+              errorWidget: (context, url, error){
+                return Image.asset('assets/photos/no_image.png',
+                fit: BoxFit.cover,
+                );
+              },
             ),
           ),
         ),

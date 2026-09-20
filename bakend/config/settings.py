@@ -44,7 +44,8 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    "DEFAULT_THROTTLE_RATES": {"search_hit": "60/min"},
 }
 
 #auth user model

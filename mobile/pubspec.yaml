@@ -80,6 +80,7 @@ flutter:
   assets:
     - assets/photos/appbar.png
     - assets/photos/no_image.jpg
+    - assets/photos/no_image.png
     - assets/brands/facebook.png
     - assets/brands/google.png
     - assets/lottie/bouquet.lottie

@@ -16,6 +16,7 @@ class ProductSerializer(serializers.ModelSerializer):
     seller_is_premium = serializers.BooleanField(source="shop.seller.is_premium", read_only=True)
     seller = serializers.IntegerField(source="shop.seller.id", read_only=True)
 
+    is_promoted = serializers.SerializerMethodField()
     class Meta:
         model = ProductModel
         fields = [
@@ -45,6 +46,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "status",
             "is_favourited",
             "weekly_sold_count",
+            "is_promoted",
         ]
         read_only_fields = [
             "id", "created_at", "updated_at",
@@ -83,3 +85,6 @@ class ProductSerializer(serializers.ModelSerializer):
         rep = super().to_representation(instance)
         rep["shop"] = ShopMinimalSerializer(instance.shop, context=self.context).data
         return rep
+
+    def get_is_promoted(self, obj): 
+        return getattr(obj, "is_promoted", False)

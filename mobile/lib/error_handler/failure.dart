@@ -79,3 +79,8 @@ class PaymentRequiredFailure extends Failure {
     required this.pricePerProduct,
   }) : super(message);
 }
+
+class CacheFailure extends Failure{
+  const CacheFailure(): super("Saqlangan ma'lumotni o'qishda xatolik");
+}
+

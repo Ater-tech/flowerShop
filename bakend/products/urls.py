@@ -6,7 +6,7 @@ from .views_discover import PopularProductsView, RecommendedProductsView, Search
 discover_urlpatterns = [
     path("product/discover/recommended/", RecommendedProductsView.as_view()),
     path("product/discover/popular/", PopularProductsView.as_view()),
-    path("product/<int:pk>/search-hit/", SearchHitView.as_view()),
+    # path("product/<int:pk>/search-hit/", SearchHitView.as_view()),
 ]
 
 
@@ -14,4 +14,4 @@ discover_urlpatterns = [
 router = DefaultRouter()
 router.register(r"flowers", FlowerViewSet, basename = 'flowers')
 
-urlpatterns = discover_urlpatterns + router.urls
+urlpatterns = discover_urlpatterns+router.urls

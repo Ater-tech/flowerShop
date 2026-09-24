@@ -26,7 +26,7 @@ class _DiscoverView(generics.ListAPIView):
         return max(1, min(limit, 20))  # klient 10000 so'rab serverni yiqitmasin
 
     def get_queryset(self):
-        return type(self).selector(self.get_limit())
+        return type(self).selector(self.get_limit(), self.request.user)
 
 
 class RecommendedProductsView(_DiscoverView):

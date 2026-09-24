@@ -1,4 +1,5 @@
 from rest_framework import viewsets, permissions, filters
+from rest_framework.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Exists, OuterRef, Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
@@ -60,11 +61,12 @@ class FlowerViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             seller = Seller.objects.select_for_update().get(pk=shop.seller_id)
-
+            if seller.user_id != self.request.user.id:  # Seller dagi User maydoni nomiga moslang
+                raise PermissionDenied("Bu do'kon sizga tegishli emas.")
             # print("SELLER ID:", seller.id)
             # print("PREMIUM:", seller.is_premium)
-            # print("PAID SLOTS:", seller.paid_product_slots)
-
+            # print("PAID SLOTS:", seller.paid_product_slots)        
+               
             if seller.is_premium:
                 # print(">>> PREMIUM SAVE")
                 serializer.save()

@@ -88,3 +88,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_is_promoted(self, obj): 
         return getattr(obj, "is_promoted", False)
+    
+    def get_fields(self):
+        fields = super().get_fields()
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            fields["shop"].queryset = Shop.objects.filter(
+                seller__user=request.user
+            )
+        return fields

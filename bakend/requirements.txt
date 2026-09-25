@@ -11,3 +11,5 @@ sqlparse==0.5.5
 tzdata==2026.2
 dj-database-url
 gunicorn
+boto3
+django-storages

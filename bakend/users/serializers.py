@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import User
-from .seller import Seller
+from seller.models import Seller
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:

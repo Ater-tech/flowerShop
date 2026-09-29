@@ -37,14 +37,14 @@ class PopularProductsView(_DiscoverView):
     selector = staticmethod(popular_products)
 
 
-class SearchHitView(APIView):
-    """Foydalanuvchi qidiruv natijasidan mahsulotni ochganda chaqiriladi."""
-    permission_classes = [AllowAny]
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = "search_hit"
+# class SearchHitView(APIView):
+#     """Foydalanuvchi qidiruv natijasidan mahsulotni ochganda chaqiriladi."""
+#     permission_classes = [AllowAny]
+#     throttle_classes = [ScopedRateThrottle]
+#     throttle_scope = "search_hit"
 
-    def post(self, request, pk):
-        # F() — o'qib-yozish emas, bitta atomik UPDATE: bir vaqtdagi
-        # so'rovlarda ham hisob yo'qolmaydi (race condition bo'lmaydi).
-        updated = Product.objects.filter(pk=pk).update(search_count=F("search_count") + 1)
-        return Response(status=204 if updated else 404)
+#     def post(self, request, pk):
+#         # F() — o'qib-yozish emas, bitta atomik UPDATE: bir vaqtdagi
+#         # so'rovlarda ham hisob yo'qolmaydi (race condition bo'lmaydi).
+#         updated = Product.objects.filter(pk=pk).update(search_count=F("search_count") + 1)
+#         return Response(status=204 if updated else 404)

@@ -18,7 +18,7 @@ def _base_queryset():
     return ProductModel.objects.select_related("shop", "shop__city", "shop__seller", "shop__seller__user")  # + .filter(is_active=True), agar bor bo'lsa
 
 
-def annotate_card_fields(qs):
+def annotate_card_fields(qs, user:None):
     """
     Mahsulot kartochkasi uchun kerakli annotate'lar.
     Reyting Subquery orqali olinadi (JOIN emas): weekly_sold_count'dagi Count
@@ -46,7 +46,7 @@ def annotate_card_fields(qs):
     return qs
 
 
-def recommended_products(limit: int):
+def recommended_products(limit: int, user:None):
     """Faqat faol reklama. Priority bo'yicha, teng bo'lsa tasodifiy (adolatli aylanish)."""
     active = _active_promotions().filter(product=OuterRef("pk"))
     priority = Subquery(active.order_by("-priority").values("priority")[:1])
@@ -58,7 +58,7 @@ def recommended_products(limit: int):
     )
 
 
-def popular_products(limit: int):
+def popular_products(limit: int, user:None):
     """Reklama birinchi, keyin reyting, keyin qidiruv soni."""
     return annotate_card_fields(_base_queryset()).order_by(
         "-is_promoted",

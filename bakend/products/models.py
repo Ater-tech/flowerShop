@@ -37,7 +37,21 @@ class ProductModel(models.Model):
         ('sold', 'Sotildi'),   # faqat personal uchun ishlatiladi
     ]
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
+    PRODUCT_TYPE_CHOICES = [
+        ("ready", "Tayyor mahsulot"),
+        ("custom_bouquet", "O'zi yasaydigan dasta"),
+    ]
 
+    # 'custom_bouquet' bo'lganda bu kartochka ro'yxatda oddiy mahsulot kabi
+    # ko'rinadi, lekin bosilganda shu do'konning FlowerVariety/Packaging/Addon
+    # to'plamidan foydalanadigan konstruktor ochiladi.
+
+    product_type = models.CharField(
+        max_length=20,
+        choices=PRODUCT_TYPE_CHOICES,
+        default="ready",
+        db_index=True,
+    )
     class Meta:
         ordering = ["-created_at"]
 

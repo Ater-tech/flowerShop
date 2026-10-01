@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # my apps
     'products',
     'users',
     'city',
@@ -36,9 +37,13 @@ INSTALLED_APPS = [
     'shop',
     'reviews',
     'django_filters',
-    'rest_framework',
-    'rest_framework_simplejwt',
     'storages',
+    'bouquets',
+    'carts',
+    'orders',
+    #frame_works
+    'rest_framework_simplejwt',
+    'rest_framework',
 
 ]
 # REST FRAMEWORK 

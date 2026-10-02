@@ -28,18 +28,10 @@ urlpatterns = [
     path('api/', include('favourites.urls')),
     path('api/', include('seller.urls')),
     path('api/', include('shop.urls')),
-    path('api/', include('reviews.urls')),
-    # path(
-    #     'api/token/', 
-    #     TokenObtainPairView.as_view(), 
-    #     name = "token_obtain_pair"
-    #         ),
-    # path(
-    #     'api/token/refresh/', 
-    #     TokenRefreshView.as_view(), 
-    #     name = "token_refresh"
-    #         )
-    # path('users/', include('users.urls'))
+    path('api/', include('bouquets.urls')),
+    path('api/', include('carts.urls')),
+    path('api/', include('orders.urls')),
+    path('api/', include('reviews.urls')),    
 ]
 
 urlpatterns += static(

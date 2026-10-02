@@ -67,3 +67,22 @@ def popular_products(limit: int, user=None):
         "-sold_count",
         "-id",  # barqaror tartib
     )[:limit]
+
+def my_products(user):
+    """
+    "Mening mahsulotlarim" tabi uchun: foydalanuvchining barcha do'konlaridagi
+    mahsulotlar, faol/mavjudlari tepada, sotilgan/nofaollari pastda —
+    har ikki guruh ichida eng yangisi birinchi.
+    """
+    return (
+        Product.objects.filter(shop__seller__user=user)
+        .select_related("shop")
+        .annotate(
+            _inactive_rank=Case(
+                When(status="active", available=True, then=Value(0)),
+                default=Value(1),
+                output_field=IntegerField(),
+            )
+        )
+        .order_by("_inactive_rank", "-created_at")
+    )

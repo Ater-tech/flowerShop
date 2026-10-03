@@ -28,9 +28,9 @@ urlpatterns = [
     path('api/', include('favourites.urls')),
     path('api/', include('seller.urls')),
     path('api/', include('shop.urls')),
-    path('api/', include('bouquets.urls')),
-    path('api/', include('carts.urls')),
-    path('api/', include('orders.urls')),
+    path('api/bouquets/', include('bouquets.urls')),
+    path('api/carts/', include('carts.urls')),
+    path('api/orders/', include('orders.urls')),
     path('api/', include('reviews.urls')),    
 ]
 

@@ -9,6 +9,7 @@ class ProductModel {
   final String? cityName;
 
   final bool available;
+  final String status;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -37,6 +38,7 @@ class ProductModel {
     required this.cityId,
     required this.cityName,
     required this.available,
+    required this.status,
     required this.createdAt,
     required this.updatedAt,
     required this.price,
@@ -64,6 +66,7 @@ class ProductModel {
       cityId: data['city'] as int?,
       cityName: data['city_name'] as String?,
       available: data['available'] ?? true,
+      status: data['status'] as String? ?? 'active',
       createdAt: DateTime.parse(data['created_at']),
       updatedAt: DateTime.parse(data['updated_at']),
       price: _parseDouble(data['price']),

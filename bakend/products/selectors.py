@@ -75,7 +75,7 @@ def my_products(user):
     har ikki guruh ichida eng yangisi birinchi.
     """
     return (
-        Product.objects.filter(shop__seller__user=user)
+        ProductModel.objects.filter(shop__seller__user=user)
         .select_related("shop")
         .annotate(
             _inactive_rank=Case(

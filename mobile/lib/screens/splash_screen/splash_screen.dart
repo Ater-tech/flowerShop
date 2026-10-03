@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
+import 'package:mobile/screens/bottom_menu/home_shell.dart';
 import 'package:mobile/screens/home_screen/register/log_in_page.dart';
 import 'package:mobile/screens/splash_screen/widgets/splash_content.dart';
 import 'package:mobile/screens/splash_screen/controllers/splash_controller.dart';
@@ -8,6 +8,7 @@ import 'package:mobile/screens/splash_screen/widgets/splash_error.dart';
 import 'package:mobile/screens/splash_screen/controllers/splash_message_controller.dart';
 import 'package:mobile/screens/splash_screen/splash_status.dart';
 
+// import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -41,7 +42,7 @@ class _SplashState extends ConsumerState<SplashScreen>
         case SplashStatus.authenticated:
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(builder: (context) => HomeShell()),
           );
         case SplashStatus.unauthenticated:
           Navigator.pushReplacement(

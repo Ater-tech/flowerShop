@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/controllers/auth_controllers.dart';
-import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
+import 'package:mobile/screens/bottom_menu/home_shell.dart';
 import 'package:mobile/screens/home_screen/register/methods/log_in_button.dart';
 import 'package:mobile/screens/home_screen/register/methods/remember_me_method.dart';
 import 'methods/email_method.dart';
@@ -10,6 +10,7 @@ import 'methods/other_method_sign_in.dart';
 import 'methods/forgot_password.dart';
 import 'methods/sign_in.dart';
 import 'methods/with_email_sign_in.dart';
+// import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
 
 class LogInPage extends ConsumerStatefulWidget {
   const LogInPage({super.key});
@@ -49,7 +50,7 @@ class _LogInState extends ConsumerState<LogInPage> {
           if (previous is AsyncLoading) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => HomeShell()),
             );
           }
         },

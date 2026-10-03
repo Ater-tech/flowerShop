@@ -14,7 +14,7 @@ import 'widget/ai_helper_card.dart';
 import 'widget/promo_banner_carousel.dart';
 import 'widget/occasion_category_row.dart';
 import 'widget/products_list_ui.dart';
-import '../../bottom_menu/bottom_navigator_bar.dart';
+// import '../../bottom_menu/bottom_navigator_bar.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -77,7 +77,6 @@ class HomePage extends ConsumerWidget {
             ),
           ),
         ),
-        bottomNavigationBar: const HomeBottomNavBar(),
       ),
     );
   }

@@ -3,8 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/providers/bottom_nav_provider.dart';
 import 'package:mobile/screens/crud_product/add_product_entry_page.dart';
 
+/// "Soting" (index 2) alohida oqim — push bilan ochiladi, currentIndex
+/// o'zgarmaydi. Qolgan to'rttasi doimiy tab: ularni HomeShell'dagi
+/// IndexedStack ko'rsatadi (pastga qarang).
 class HomeBottomNavBar extends ConsumerWidget {
   const HomeBottomNavBar({super.key});
+
+  static const int sellIndex = 2;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -13,16 +18,12 @@ class HomeBottomNavBar extends ConsumerWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index) {
-        switch (index) {
-          case 2:
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddProductEntryPage()),
-              );
-            }
+        if (index == sellIndex) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const AddProductEntryPage()),
+          );
+          return;
         }
-
         ref.read(bottomNavIndexProvider.notifier).state = index;
       },
       type: BottomNavigationBarType.fixed,
@@ -35,7 +36,10 @@ class HomeBottomNavBar extends ConsumerWidget {
           activeIcon: Icon(Icons.home),
           label: 'Bosh sahifa',
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.inventory_2_outlined), label: 'Buyurtmalar'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.inventory_2_outlined),
+          label: 'Buyurtmalar',
+        ),
         BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Soting'),
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_bag_outlined),

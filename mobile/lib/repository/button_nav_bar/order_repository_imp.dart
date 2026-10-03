@@ -35,4 +35,16 @@ class OrderRepositoryImpl implements OrderRepository {
       return Error<List<ProductModel>>(const UnknownFailure());
     }
   }
+
+  @override
+  Future<Result<List<OrderModel>>> checkout() async {
+    try{
+      final json = await _remote.checkout();
+      return Success(json.map(OrderModel.fromJson).toList());
+    } on DioException catch (e){
+       return Error<List<OrderModel>>(mapDioExceptionToFailure(e));
+    } catch (_) {
+      return Error<List<OrderModel>>(const UnknownFailure());
+    }
+  }
 }

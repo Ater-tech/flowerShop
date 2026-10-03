@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/providers/product_search_providers.dart';
+import 'package:mobile/providers/product_provider/product_search_providers.dart';
 import 'package:mobile/screens/home_screen/product_cart/card_product.dart';
 
 const double _kCardHeight = 230; // kartochkangiz balandligiga moslang

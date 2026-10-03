@@ -22,4 +22,5 @@ class ApiEndpoints {
   static const popularPath = '/api/product/discover/popular/';
   static const myOrdersPath = '/api/orders/';
   static const myProductsPath = '/api/product/mine/';
+  static const checkoutPath = '/api/orders/checkout/';
 } 

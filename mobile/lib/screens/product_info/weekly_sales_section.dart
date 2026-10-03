@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/providers/product_detail_provider.dart';
+import 'package:mobile/providers/product_provider/product_detail_provider.dart';
 class WeeklySalesSection extends ConsumerWidget {
   final int productId;
 

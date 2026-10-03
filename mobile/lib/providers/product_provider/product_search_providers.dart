@@ -2,9 +2,9 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import '../models/product_model.dart';
-import '../models/product_models/product_query.dart';
-import '../error_handler/error_result.dart';
+import '../../models/product_model.dart';
+import '../../models/product_models/product_query.dart';
+import '../../error_handler/error_result.dart';
 import 'product_repo_providers.dart';
 
 /// Foydalanuvchi TextField'ga yozgan xom matn (har harfda o'zgaradi)

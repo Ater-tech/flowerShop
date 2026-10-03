@@ -1,10 +1,10 @@
 // favourites/application/favourite_providers.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:mobile/providers/product_detail_provider.dart';
+import 'package:mobile/providers/product_provider/product_detail_provider.dart';
 import 'package:mobile/providers/repo_providers.dart';
 import 'package:mobile/server/api_endpoints.dart';
-import 'product_search_providers.dart';
+import 'product_provider/product_search_providers.dart';
 // import '../../../core/network/api_main_service_provider.dart';
 
 /// Hozirda qaysi mahsulot ID'lari uchun so'rov ketayotganini ushlab turadi

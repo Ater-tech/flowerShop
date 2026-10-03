@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/providers/product_search_providers.dart';
+import 'package:mobile/providers/product_provider/product_search_providers.dart';
 import 'package:mobile/screens/home_screen/search/widget/product_text_field.dart';
 
 class SearchBarWidget extends ConsumerStatefulWidget {

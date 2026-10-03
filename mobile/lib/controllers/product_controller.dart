@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
   // import 'package:mobile/error_handler/failure.dart';
   import 'package:mobile/models/product_model.dart';
   // import 'package:mobile/models/product_models/product_query.dart';
-  import 'package:mobile/providers/product_repo_providers.dart';
-  import 'package:mobile/providers/product_search_providers.dart'; // effectiveQueryProvider
+  import 'package:mobile/providers/product_provider/product_repo_providers.dart';
+  import 'package:mobile/providers/product_provider/product_search_providers.dart'; // effectiveQueryProvider
 
   class ProductController extends AsyncNotifier<List<ProductModel>> {
     @override

@@ -2,11 +2,11 @@
 # repository qatlamining backend'dagi o'xshashi.
 from datetime import timedelta
 
-from django.db.models import Count, Exists, F, OuterRef, Q, Subquery, Value
+from django.db.models import Case, Count, Exists, F, OuterRef, Q, Subquery, Value, IntegerField, When
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 
-from favourites.models import Favourite  # TODO: sizdagi haqiqiy yo'l
+from favourites.models import Favourite  
 from products.models import ProductModel, ProductPromotion
 
 

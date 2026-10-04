@@ -3,8 +3,8 @@ import 'package:mobile/error_handler/dio_failure_mapper.dart';
 import 'package:mobile/error_handler/error_result.dart';
 import 'package:mobile/error_handler/failure.dart'; 
 import 'package:mobile/models/product_model.dart'; 
-import '../../repository/search_discover_repository.dart';
-import '../storage/search_discover_remote_ds.dart';
+import 'package:mobile/repository/search_repo/search_discover_repository.dart';
+import 'package:mobile/storage/search_discover_remote_ds.dart';
 
 class SearchDiscoverRepositoryImpl implements SearchDiscoverRepository {
   SearchDiscoverRepositoryImpl(this._remote);

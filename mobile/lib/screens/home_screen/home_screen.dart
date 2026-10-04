@@ -5,7 +5,7 @@ import 'package:mobile/providers/button_nav_bar/bottom_nav_provider.dart';
 import 'package:mobile/screens/home_screen/product_menu/main_page.dart';
 import 'package:mobile/screens/bottom_menu/orders_page/orders_page.dart';
 import 'package:mobile/screens/bottom_menu/cart_page/cart_page.dart';
-import 'package:mobile/screens/bottom_menu/profile_page.dart';
+import 'package:mobile/screens/bottom_menu/profile_page/profile_page.dart';
 import 'package:mobile/screens/bottom_menu/bottom_navigator_bar.dart';
 
 class HomeScreen extends ConsumerWidget {

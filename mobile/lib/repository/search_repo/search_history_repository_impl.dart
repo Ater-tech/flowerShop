@@ -1,7 +1,7 @@
 import 'package:mobile/error_handler/error_result.dart'; 
 import 'package:mobile/error_handler/failure.dart'; 
-import '../repository/search_history_repository.dart';
-import '../storage/search_history_local_ds.dart';
+import 'package:mobile/repository/search_repo/search_history_repository.dart';
+import 'package:mobile/storage/search_history_local_ds.dart';
 
 class SearchHistoryRepositoryImpl implements SearchHistoryRepository {
   SearchHistoryRepositoryImpl(this._ds);

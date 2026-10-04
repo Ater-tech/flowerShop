@@ -7,10 +7,10 @@ import 'package:mobile/providers/repo_providers.dart'; // apiProvider
 import 'package:mobile/error_handler/error_result.dart'; 
 import 'package:mobile/storage/search_discover_remote_ds.dart';
 import 'package:mobile/storage/search_history_local_ds.dart';
-import 'package:mobile/repository/search_discover_repository_impl.dart';
-import 'package:mobile/repository/search_history_repository_impl.dart';
-import 'package:mobile/repository/search_discover_repository.dart';
-import 'package:mobile/repository/search_history_repository.dart';
+import 'package:mobile/repository/search_repo/search_discover_repository_impl.dart';
+import 'package:mobile/repository/search_repo/search_history_repository_impl.dart';
+import 'package:mobile/repository/search_repo/search_discover_repository.dart';
+import 'package:mobile/repository/search_repo/search_history_repository.dart';
 import 'package:mobile/models/product_model.dart';
 
 // ───────── Tab holati ─────────

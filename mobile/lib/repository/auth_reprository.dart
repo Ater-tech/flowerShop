@@ -46,10 +46,7 @@ class AuthReprository {
     }
   }
 
-  Future<void> logout({
-    required String username,
-    required String password,
-  }) async {
+  Future<void> logout() async {
     try {
       await storage.deleteTokensAndRememberMe();
     } catch (e) {
@@ -78,4 +75,5 @@ class AuthReprository {
       return false;
     }
   }
+  
 }

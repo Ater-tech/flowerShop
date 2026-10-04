@@ -28,8 +28,9 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     city_name = serializers.CharField(source="city.name", read_only=True, default=None)
-    is_seller = serializers.SerializerMethodField()
-
+    # is_seller = serializers.SerializerMethodField() 
+    # har bir user seller bola oladi v abu doim True
+    username = serializers.CharField()
     class Meta:
         model = User
         fields = [
@@ -40,11 +41,11 @@ class ProfileSerializer(serializers.ModelSerializer):
             "avatar",
             "city",
             "city_name",
-            "is_seller",
+            # "is_seller",
             "date_joined",
         ]
         # phone_number o'zgartirilmaydi (login identifikatori, OTP kerak bo'lardi)
-        read_only_fields = ["id", "phone_number", "date_joined"]
+        read_only_fields = ["id", "phone_number", "date_joined", "username"]
 
     def get_is_seller(self, obj):
         # Seller -> User OneToOne, related_name="seller" deb faraz qilindi

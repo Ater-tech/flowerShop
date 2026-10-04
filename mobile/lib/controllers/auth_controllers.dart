@@ -2,10 +2,12 @@ import 'package:mobile/providers/repo_providers.dart';
 import 'package:mobile/repository/auth_reprository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:mobile/repository/token_repository.dart';
 
 class AuthController extends StateNotifier<AsyncValue<void>> {
   final AuthReprository _repository;
-  AuthController(this._repository) : super(const AsyncValue.data(null));
+  final TokenRepository _tokenRepository;
+  AuthController(this._repository, this._tokenRepository) : super(const AsyncValue.data(null));
 
   Future<void> login(String username, String password, bool rememberMe) async {
     state = const AsyncValue.loading();
@@ -32,12 +34,27 @@ class AuthController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  Future<bool> refresh() async {
-    return await Future.delayed(Duration(seconds: 10));
+  Future<String?> refresh() async {
+    try {
+      return await _tokenRepository.refreshToken();
+    } catch (_){
+      return "Yangilashda xatolik";
+    }
   }
+
+  Future<String?> logout() async {
+    try{await _repository.logout();
+    return null;} catch (_){
+      return "Akkauntdan chiqishda xatolik ro'y berdi";
+    }
+  }
+  
 }
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue<void>>(
-      (ref) => AuthController(ref.read(authReprositoryProvider)),
+      (ref) => AuthController(
+        ref.read(authReprositoryProvider),
+        ref.read(tokenRepositoryProvider),
+      ),
     );

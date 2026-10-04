@@ -6,6 +6,7 @@ import 'package:mobile/error_handler/error_result.dart';
 import 'package:mobile/error_handler/failure.dart';
 import 'package:mobile/error_handler/dio_failure_mapper.dart';
 import 'package:mobile/models/profile_info/profile_model.dart';
+import 'package:mobile/server/api_endpoints.dart';
 
 class ProfileRepository {
   const ProfileRepository(this._dio);
@@ -13,8 +14,8 @@ class ProfileRepository {
   /// apiMainServiceProvider orqali olingan markaziy Dio (bare Dio() EMAS).
   final Dio _dio;
 
-  static const _mePath = '/api/users/me/';
-  static const _passwordPath = '/api/users/me/change-password/';
+  static const _mePath = ApiEndpoints.mePath;
+  static const _passwordPath = ApiEndpoints.passwordPath;
 
   Future<Result<ProfileModel>> fetchProfile() async {
     try {

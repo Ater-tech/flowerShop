@@ -23,4 +23,6 @@ class ApiEndpoints {
   static const myOrdersPath = '/api/orders/';
   static const myProductsPath = '/api/product/mine/';
   static const checkoutPath = '/api/orders/checkout/';
+  static const mePath = '/api/users/me/';
+  static const passwordPath = '/api/users/me/change-password/';
 } 

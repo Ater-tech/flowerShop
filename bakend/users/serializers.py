@@ -30,7 +30,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     city_name = serializers.CharField(source="city.name", read_only=True, default=None)
     # is_seller = serializers.SerializerMethodField() 
     # har bir user seller bola oladi v abu doim True
-    username = serializers.CharField()
     class Meta:
         model = User
         fields = [

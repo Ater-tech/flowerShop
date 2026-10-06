@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:mobile/providers/repo_providers.dart'; // apiProvider
-import 'package:mobile/error_handler/error_result.dart'; 
+import 'package:mobile/error_handler/error_result.dart';
 import 'package:mobile/storage/search_discover_remote_ds.dart';
 import 'package:mobile/storage/search_history_local_ds.dart';
 import 'package:mobile/repository/search_repo/search_discover_repository_impl.dart';
@@ -24,7 +24,8 @@ final searchHistoryRepositoryProvider = Provider<SearchHistoryRepository>(
 );
 
 class SearchHistoryController extends AsyncNotifier<List<String>> {
-  SearchHistoryRepository get _repo => ref.read(searchHistoryRepositoryProvider);
+  SearchHistoryRepository get _repo =>
+      ref.read(searchHistoryRepositoryProvider);
 
   @override
   Future<List<String>> build() async {
@@ -39,17 +40,24 @@ class SearchHistoryController extends AsyncNotifier<List<String>> {
   Future<void> clear() => _apply(_repo.clear);
 
   Future<void> _apply(Future<Result<List<String>>> Function() op) async {
-    if (await op() case Success(:final data)) state = AsyncData(data);
+    switch (await op()) {
+      case Success(:final data):
+        state = AsyncData(data);
+      case Error(:final failure):
+        debugPrint('[history] save failed: $failure');
+    }
   }
 }
 
 final searchHistoryControllerProvider =
-    AsyncNotifierProvider<SearchHistoryController, List<String>>(SearchHistoryController.new);
+    AsyncNotifierProvider<SearchHistoryController, List<String>>(
+      SearchHistoryController.new,
+    );
 
 // ───────── Tavsiya va mashhurlar ─────────
 final searchDiscoverRepositoryProvider = Provider<SearchDiscoverRepository>(
   (ref) => SearchDiscoverRepositoryImpl(
-    SearchDiscoverRemoteDataSource(ref.watch(apiProvider).dio), // turi Dio 
+    SearchDiscoverRemoteDataSource(ref.watch(apiProvider).dio), // turi Dio
   ),
 );
 
@@ -62,19 +70,26 @@ extension _CacheFor on Ref {
   }
 }
 
-final recommendedProductsProvider = FutureProvider.autoDispose<List<ProductModel>>((ref) async {
-  debugPrint('[discover] recommended BUILD');
-   ref.onDispose(() => debugPrint('[discover] recommended DISPOSE'));
-  ref.cacheFor(const Duration(minutes: 2));
-  return switch (await ref.watch(searchDiscoverRepositoryProvider).getRecommended()) {
-    Success(:final data) => data,
-    Error(:final failure) => throw failure,
-  };
-});
+final recommendedProductsProvider =
+    FutureProvider.autoDispose<List<ProductModel>>((ref) async {
+      debugPrint('[discover] recommended BUILD');
+      ref.onDispose(() => debugPrint('[discover] recommended DISPOSE'));
+      ref.cacheFor(const Duration(minutes: 2));
+      return switch (await ref
+          .watch(searchDiscoverRepositoryProvider)
+          .getRecommended()) {
+        Success(:final data) => data,
+        Error(:final failure) => throw failure,
+      };
+    });
 
-final popularProductsProvider = FutureProvider.autoDispose<List<ProductModel>>((ref) async {
+final popularProductsProvider = FutureProvider.autoDispose<List<ProductModel>>((
+  ref,
+) async {
   ref.cacheFor(const Duration(minutes: 2));
-  return switch (await ref.watch(searchDiscoverRepositoryProvider).getPopular()) {
+  return switch (await ref
+      .watch(searchDiscoverRepositoryProvider)
+      .getPopular()) {
     Success(:final data) => data,
     Error(:final failure) => throw failure,
   };

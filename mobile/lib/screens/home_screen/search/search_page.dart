@@ -16,42 +16,54 @@ class SearchPage extends ConsumerStatefulWidget {
 }
 
 class _SearchState extends ConsumerState<SearchPage> {
+  void _saveCurrentQuery() {
+    final q = ref.read(rawSearchInputProvider).trim();
+    if (q.length >= 2) {
+      ref.read(searchHistoryControllerProvider.notifier).add(q);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isTyping = ref.watch(rawSearchInputProvider).trim().isNotEmpty;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFFAFAFA),
-        body: SafeArea(
-          bottom: false,
-          child: CustomScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            slivers: [
-              const SliverToBoxAdapter(child: SearchBarWidget()),
-              if (isTyping)
-                const SearchResultsSliver()
-              else ...[
-                SliverToBoxAdapter(
-                  child: SearchHistorySection(
-                    onSelected: (query) {
-                      ref.read(rawSearchInputProvider.notifier).state = query;
-                      ref
-                          .read(searchHistoryControllerProvider.notifier)
-                          .add(query);
-                      FocusScope.of(context).unfocus();
-                      debugPrint('history tapped: $query');
-                    },
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) _saveCurrentQuery();
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
+        child: Scaffold(
+          backgroundColor: const Color(0xFFFAFAFA),
+          body: SafeArea(
+            bottom: false,
+            child: CustomScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              slivers: [
+                const SliverToBoxAdapter(child: SearchBarWidget()),
+                if (isTyping)
+                  const SearchResultsSliver()
+                else ...[
+                  SliverToBoxAdapter(
+                    child: SearchHistorySection(
+                      onSelected: (query) {
+                        ref.read(rawSearchInputProvider.notifier).state = query;
+                        ref
+                            .read(searchHistoryControllerProvider.notifier)
+                            .add(query);
+                        FocusScope.of(context).unfocus();
+                        debugPrint('history tapped: $query');
+                      },
+                    ),
                   ),
-                ),
-                const SliverToBoxAdapter(child: DiscoverSection()),
+                  const SliverToBoxAdapter(child: DiscoverSection()),
+                ],
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
               ],
-              const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            ],
+            ),
           ),
         ),
       ),

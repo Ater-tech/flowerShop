@@ -21,20 +21,18 @@ class FlowerModel {
     required this.created,
     required this.fav,
   });
-
   factory FlowerModel.fromJSON(Map<String, dynamic> data) {
-    return FlowerModel(
-      id: data['id'],
-      name: data['name'],
-      shopName: data['shop_name'],
-      image: data['image'],
-      description: data['description'],
-      location: data['location'],
-      price: double.parse(data['price']),
-      available: data['available'],
-      // aviable: bool.parse(data['aviable']),
-      created: DateTime.parse(data['created']),
-      fav: data['is_favourite'],
-    );
-  }
+  return FlowerModel(
+    id: data['id'] as int,
+    name: (data['name'] ?? '') as String,
+    shopName: (data['shop_name'] ?? '') as String,
+    image: (data['image'] ?? '') as String,
+    description: (data['description'] ?? '') as String,
+    location: (data['location'] ?? '') as String,
+    price: double.tryParse('${data['price']}') ?? 0,
+    available: (data['available'] as bool?) ?? true,
+    created: DateTime.tryParse('${data['created']}') ?? DateTime.now(),
+    fav: (data['is_favourite'] as bool?) ?? false,
+  );
+}  
 }

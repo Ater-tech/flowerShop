@@ -1,42 +1,56 @@
 // favourites/application/favourite_providers.dart
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:mobile/providers/product_provider/product_detail_provider.dart';
 import 'package:mobile/providers/repo_providers.dart';
 import 'package:mobile/server/api_endpoints.dart';
 import 'product_provider/product_search_providers.dart';
-// import '../../../core/network/api_main_service_provider.dart';
+import 'package:mobile/models/flower_model.dart';
 
 /// Hozirda qaysi mahsulot ID'lari uchun so'rov ketayotganini ushlab turadi
 final favouritePendingIdsProvider = StateProvider<Set<int>>((ref) => {});
+
+final favouritesListProvider = FutureProvider.autoDispose<List<FlowerModel>>((
+  ref,
+) async {
+  final api = ref.watch(apiProvider);
+  final res = await api.dio.get(ApiEndpoints.favList);
+
+  // pagination yoqilgan bo'lsa {results: [...]}, bo'lmasa oddiy list
+  final raw = res.data;
+  final list = (raw is Map ? raw['results'] : raw) as List;
+
+  return list
+      .map(
+        (e) => FlowerModel.fromJSON(e['flower_detail'] as Map<String, dynamic>),
+      )
+      .toList();
+});
 
 class FavouriteController extends Notifier<void> {
   @override
   void build() {}
 
-  Future<void> toggle(int productId) async {
-    final pendingIds = ref.read(favouritePendingIdsProvider.notifier);
-
-    // Bir xil mahsulotga qayta-qayta bosishning oldini olamiz
-    if (ref.read(favouritePendingIdsProvider).contains(productId)) return;
-
-    pendingIds.update((state) => {...state, productId});
-
-    try {
-      final apiService = ref.read(apiProvider);
-      await apiService.dio.post(
-        ApiEndpoints.favToggle,
-        data: {"flower": productId},
-      );
-
-      // Server javobi kelgach, ro'yxatni serverdan qayta so'raymiz
-      ref.invalidate(productListProvider);
-      // await ref.read(productListProvider.future); 
-      ref.invalidate(productDetailProvider(productId));
-    } finally {
-      pendingIds.update((state) => {...state}..remove(productId));
-    }
-  } 
+  Future<bool> toggle(int productId) async {
+  final pendingIds = ref.read(favouritePendingIdsProvider.notifier);
+  if (ref.read(favouritePendingIdsProvider).contains(productId)) return false;
+  pendingIds.update((s) => {...s, productId});
+  try {
+    await ref.read(apiProvider).dio.post(
+      ApiEndpoints.favToggle,
+      data: {"flower": productId},
+    );
+    ref.invalidate(productListProvider);
+    ref.invalidate(favouritesListProvider);
+    ref.invalidate(productDetailProvider(productId));
+    return true;
+  } on DioException {
+    return false; // UI'da SnackBar ko'rsatish mumkin
+  } finally {
+    pendingIds.update((s) => {...s}..remove(productId));
+  }
+}
 }
 
 final favouriteControllerProvider = NotifierProvider<FavouriteController, void>(

@@ -5,12 +5,14 @@ import 'package:mobile/providers/search_providers.dart';
 
 class ProductTextField extends ConsumerWidget {
   final TextEditingController controller;
-  const ProductTextField({super.key, required this.controller});
+  final bool autoFocus;
+  const ProductTextField({super.key, required this.controller, this.autoFocus = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return TextField(
       controller: controller,
+      autofocus: autoFocus,
       textInputAction: TextInputAction.search,
       style: const TextStyle(color: Colors.black87),
       onChanged: (value) {

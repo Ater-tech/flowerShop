@@ -1,4 +1,5 @@
 class FlowerModel {
+  final int id;
   String name;
   String shopName;
   String image;
@@ -9,6 +10,7 @@ class FlowerModel {
   DateTime created;
   bool fav;
   FlowerModel({
+    required this.id,
     required this.name,
     required this.shopName,
     required this.image,
@@ -22,6 +24,7 @@ class FlowerModel {
 
   factory FlowerModel.fromJSON(Map<String, dynamic> data) {
     return FlowerModel(
+      id: data['id'],
       name: data['name'],
       shopName: data['shop_name'],
       image: data['image'],

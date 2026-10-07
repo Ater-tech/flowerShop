@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/controllers/product_controller.dart';
 import 'package:mobile/providers/banner_provider.dart';
+import 'package:mobile/screens/home_screen/favourites/favourites.dart';
 import 'package:mobile/screens/home_screen/product_menu/widget/on_refresh.dart';
 import 'package:mobile/screens/home_screen/search/search_page.dart';
 import 'widget/location_now.dart';
@@ -50,6 +51,8 @@ class HomePage extends ConsumerWidget {
                     },
                     onFavoriteTap: () {
                       // sevimlilar sahifasiga o'tish
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_)=> FavouritesPage()));
                     },
                   ),
                 ),

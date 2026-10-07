@@ -17,7 +17,7 @@ class _SearchBarState extends ConsumerState<SearchBarWidget> {
   @override
   void initState(){
     super.initState();
-    nameController = TextEditingController();
+    nameController = TextEditingController(text: ref.read(rawSearchInputProvider));
   }
 
   @override
@@ -44,7 +44,7 @@ class _SearchBarState extends ConsumerState<SearchBarWidget> {
         children: [
           IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.maybePop(context);
             },
             icon: Icon(Icons.arrow_back_ios, color: Colors.black.withValues(alpha: 0.6)),
           ),

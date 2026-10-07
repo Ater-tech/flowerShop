@@ -23,8 +23,15 @@ class SearchDebouncer extends Notifier<void> {
 
   @override
   void build() {
-    ref.listen(rawSearchInputProvider, (previous, next) {
+    ref.onDispose(()=>_timer?.cancel());
+    
+    ref.listen<String>(rawSearchInputProvider, (previous, next) {
       _timer?.cancel();
+      if(next.trim().isEmpty){
+        ref.read(debouncedSearchProvider.notifier).state='';
+        return;
+      }  
+
       _timer = Timer(const Duration(milliseconds: 400), () {
         ref.read(debouncedSearchProvider.notifier).state = next;
       });

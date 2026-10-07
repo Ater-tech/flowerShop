@@ -16,6 +16,16 @@ class SearchPage extends ConsumerStatefulWidget {
 }
 
 class _SearchState extends ConsumerState<SearchPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      if (mounted) {
+        ref.read(rawSearchInputProvider.notifier).state = '';
+      }
+    });
+  }
+
   void _saveCurrentQuery() {
     final q = ref.read(rawSearchInputProvider).trim();
     if (q.length >= 2) {
@@ -25,10 +35,15 @@ class _SearchState extends ConsumerState<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(searchDebouncerProvider);
     final isTyping = ref.watch(rawSearchInputProvider).trim().isNotEmpty;
     return PopScope(
+      canPop: !isTyping,
       onPopInvokedWithResult: (didPop, _) {
-        if (didPop) _saveCurrentQuery();
+        if (didPop) return;
+        _saveCurrentQuery();
+        ref.read(rawSearchInputProvider.notifier).state = '';
+        FocusScope.of(context).unfocus();
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(

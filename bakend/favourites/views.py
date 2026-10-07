@@ -16,9 +16,16 @@ class FavouriteViewSet(
     # http_method_names = ["get", "post", "delete"]
 
     def get_queryset(self):
-        return Favourite.objects.filter(user=self.request.user).select_related(
-            "flower", "flower__shop"
-            )
+        return (
+        Favourite.objects
+        .filter(user=self.request.user)
+        .select_related(
+            "flower",
+            "flower__shop",
+            "flower__shop__seller__user",
+            "flower__shop__city",
+        )
+    )
 
     # def perform_create(self, serializer):
     #     serializer.save(user=self.request.user)

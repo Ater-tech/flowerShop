@@ -17,5 +17,5 @@ class FavouriteSerializer(serializers.ModelSerializer):
         # Bu ro'yxatdagi hamma narsa ta'rifiga ko'ra sevimli.
         # Shu bilan is_favourite maydoni annotatsiyaga bog'liq bo'lmay qoladi.
         if data.get("flower_detail") is not None:
-            data["flower_detail"]["is_favourite"] = True
+            data["flower_detail"]["is_favourited"] = True
         return data

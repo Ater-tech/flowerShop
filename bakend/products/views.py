@@ -1,21 +1,26 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, filters
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db import transaction
 from django.db.models import Exists, OuterRef, Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import ProductModel, ProductPricingConfig
 from .serializers import ProductSerializer
-from .exceptions import ProductLimitReached
+from .exceptions import ProductLimitReached, ProductInActiveOrder
+from .permissions import IsProductOwnerOrReadOnly
 from favourites.models import Favourite
 from seller.models import Seller
 from django.utils import timezone
 from datetime import timedelta
 
+from orders.models import Order, OrderItem
 
 class FlowerViewSet(viewsets.ModelViewSet):
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsProductOwnerOrReadOnly]
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["name", "description"]
     ordering_fields = ["price", "rating_avg", "sold_count", "created_at"]
@@ -104,4 +109,18 @@ class FlowerViewSet(viewsets.ModelViewSet):
             seller.save(update_fields=["paid_product_slots"])
         else:
             raise ProductLimitReached() 
-        
+    
+    
+    def perform_destroy(self, instance):
+        has_active = OrderItem.objects.filter(
+            product=instance,
+        ).exclude(
+            order__status__in=Order.COMPLETED_STATUSES,
+        ).exists()
+        if has_active:
+            raise ProductInActiveOrder()
+
+        image = instance.image
+        instance.delete()
+        if image:
+            image.delete(save=False)

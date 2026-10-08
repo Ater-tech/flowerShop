@@ -102,14 +102,14 @@ class OrderItem(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=(
+                check=~(
                     models.Q(
                         product__isnull=False,
-                        bouquet_composition__isnull=True,
+                        # bouquet_composition__isnull=True,
                     )
-                    |
+                    &
                     models.Q(
-                        product__isnull=True,
+                        # product__isnull=True,
                         bouquet_composition__isnull=False,
                     )
                 ),

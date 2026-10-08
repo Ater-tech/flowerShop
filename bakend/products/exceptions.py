@@ -11,3 +11,9 @@ class ProductLimitReached(APIException):
         "price_per_product": 5000,
     }
     default_code = "product_limit_reached"
+
+
+class ProductInActiveOrder(APIException):
+    status_code = 409
+    default_detail = "Bu mahsulot faol buyurtmada bor. Buyurtma yakunlangach o'chirishingiz mumkin."
+    default_code = "product_in_active_order"

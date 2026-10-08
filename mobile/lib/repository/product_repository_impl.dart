@@ -114,4 +114,39 @@ class ProductRepositoryImpl implements ProductRepository {
       return const Error(UnknownFailure());
     }
   }
+
+  @override
+  // product_repository.dart
+  Future<Result<ProductModel>> updateProduct({
+    required int id,
+    required String name,
+    required num price,
+    required String description,
+    File? newImage,
+  }) async {
+    try {
+      final fields = {'name': name, 'price': price, 'description': description};
+      final Object body = newImage == null
+          ? fields
+          : FormData.fromMap({
+              ...fields,
+              'image': await MultipartFile.fromFile(newImage.path),
+            });
+
+      final res = await dio.patch('/api/flowers/$id/', data: body);
+      return Success(ProductModel.fromJson(res.data));
+    } on DioException catch (e) {
+      return Error(mapDioExceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Result<void>> deleteProduct(int id) async {
+    try {
+      await dio.delete('${ApiEndpoints.flowers}$id/');
+      return const Success(null);
+    } on DioException catch (e) {
+      return Error(mapDioExceptionToFailure(e));
+    }
+  }
 }

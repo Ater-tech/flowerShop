@@ -18,4 +18,12 @@ abstract class ProductRepository {
     int discountPercent,
     bool isOriginal,
   });
+  Future<Result<ProductModel>> updateProduct({
+    required int id,
+    required String name,
+    required num price,
+    required String description,
+    File? newImage,
+  });
+  Future<Result<void>> deleteProduct(int id);
 }

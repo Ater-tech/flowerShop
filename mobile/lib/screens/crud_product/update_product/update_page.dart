@@ -1,5 +1,11 @@
 // edit_product_page.dart
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobile/controllers/edit_product_controller.dart';
+import 'package:mobile/models/product_model.dart';
 
 class EditProductPage extends ConsumerStatefulWidget {
   const EditProductPage({super.key, required this.product});
@@ -142,7 +148,7 @@ class _EditProductPageState extends ConsumerState<EditProductPage> {
                             _newImage != null
                                 ? Image.file(_newImage!, fit: BoxFit.cover)
                                 : Image.network(
-                                    widget.product.image,
+                                    widget.product.imageUrl,
                                     fit: BoxFit.cover,
                                   ),
                             const Align(
@@ -218,9 +224,9 @@ class _EditProductPageState extends ConsumerState<EditProductPage> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: cs.errorContainer.withOpacity(0.25),
+                      color: cs.errorContainer.withValues(alpha: .25),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: cs.error.withOpacity(0.5)),
+                      border: Border.all(color: cs.error.withValues(alpha: .5)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

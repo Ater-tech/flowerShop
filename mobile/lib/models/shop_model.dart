@@ -56,6 +56,7 @@ class ShopModel {
     );
   }
 
+  /// (API'ga yuborish uchun toJson() ishlatiladi.)
   Map<String, dynamic> toJson() {
     return {
       'shop_type': shopType.apiValue,
@@ -64,6 +65,24 @@ class ShopModel {
       'city': cityId,
       'latitude': latitude,
       'longitude': longitude,
+    };
+  }
+  /// Lokal keshlash uchun: fromJson'ning aniq teskarisi.
+  Map<String, dynamic> toCacheJson() {
+    return {
+      'id': id,
+      'shop_type': shopType.apiValue, // enum emas, String
+      'name': name,
+      'address': address,
+      'city': cityId,
+      'city_name': cityName,
+      'latitude': latitude,
+      'longitude': longitude,
+      'is_default': isDefault,
+      'total_sold': totalSold,
+      'product_count': productCount,
+      // seller ataylab yozilmaydi (nullable): kartada kerak emas,
+      // SellerModel.toJson() yozishni talab qilmasligi uchun
     };
   }
 }

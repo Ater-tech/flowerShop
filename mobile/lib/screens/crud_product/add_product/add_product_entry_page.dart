@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/providers/seller_provider.dart';
 import 'package:mobile/providers/shop_provider.dart';
-import 'package:mobile/screens/crud_product/add_product_page.dart';
+import 'package:mobile/screens/crud_product/add_product/add_product_page.dart';
 import 'package:mobile/screens/crud_product/seller_account/seller_on_boarding_page.dart';
 import 'package:mobile/screens/crud_product/seller_account/shop_on_boarding.dart';
 import 'package:mobile/screens/crud_product/shop_dropdown.dart';

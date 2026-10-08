@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/providers/recommended_products_providers.dart';
+import 'package:mobile/providers/product_provider/recommended_products_providers.dart';
 import 'package:mobile/screens/home_screen/product_cart/card_product.dart';
 class RecommendedProductsSection extends ConsumerWidget {
   const RecommendedProductsSection({super.key, required this.excludeProductId});

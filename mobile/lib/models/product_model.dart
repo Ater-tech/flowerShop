@@ -100,6 +100,44 @@ class ProductModel {
     );
   }
 
+    Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'image_url': imageUrl,
+      'city': cityId,
+      'city_name': cityName,
+      'available': available,
+      'status': status,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+      'price': price,
+      'old_price': oldPrice,
+      'discount_percent': discountPercent,
+      'seller': sellerId,
+      'seller_name': sellerName,
+      'seller_is_premium': sellerIsPremium,
+      'rating_avg': ratingAvg,
+      'review_count': reviewCount,
+      'sold_count': soldCount,
+      'weekly_sold_count': weeklySoldCount,
+      'view_count': viewCount,
+      'is_original': isOriginal,
+      'is_favourited': isFavourited,
+
+      // fromJson'dagi "shop Map emas" tarmog'iga mos: id + yassi maydonlar
+      // 'shop': shop.id,
+      // 'shop_name': shop.name,
+      // 'shop_type': shop.shopType,
+      // 'address': shop.address,
+      // 'cityId': shop.cityId,
+      // 'cityName': shop.cityName,
+      // 'latitude': shop.latitude,
+      // 'longitude': shop.longitude,
+      'shop': shop.toCacheJson(),
+    };
+  }
   static double _parseDouble(dynamic value) {
     if (value == null) return 0.0;
     if (value is double) return value;

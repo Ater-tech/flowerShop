@@ -13,6 +13,9 @@ import 'package:mobile/repository/search_repo/search_discover_repository.dart';
 import 'package:mobile/repository/search_repo/search_history_repository.dart';
 import 'package:mobile/models/product_model.dart';
 
+import 'package:mobile/storage/recently_viewed_local_ds.dart';
+import 'package:mobile/repository/search_repo/recently_viewed_repository.dart';
+
 // ───────── Tab holati ─────────
 enum SearchTab { recent, recommended, popular }
 
@@ -94,3 +97,38 @@ final popularProductsProvider = FutureProvider.autoDispose<List<ProductModel>>((
     Error(:final failure) => throw failure,
   };
 });
+// ───────── Oxirgi ko'rilganlar ─────────
+// (importlarni fayl tepasiga qo'ying)
+
+final recentlyViewedRepositoryProvider = Provider<RecentlyViewedRepository>(
+  (ref) => RecentlyViewedRepositoryImpl(RecentlyViewedLocalDataSource()),
+);
+
+class RecentlyViewedController extends AsyncNotifier<List<ProductModel>> {
+  RecentlyViewedRepository get _repo => ref.read(recentlyViewedRepositoryProvider);
+
+  @override
+  Future<List<ProductModel>> build() async {
+    return switch (await _repo.getAll()) {
+      Success(:final data) => data,
+      Error() => const <ProductModel>[],
+    };
+  }
+
+  Future<void> add(ProductModel product) => _apply(() => _repo.add(product));
+  Future<void> clear() => _apply(_repo.clear);
+
+  Future<void> _apply(Future<Result<List<ProductModel>>> Function() op) async {
+    switch (await op()) {
+      case Success(:final data):
+        state = AsyncData(data);
+      case Error(:final failure):
+        debugPrint('[recent] save failed: $failure');
+    }
+  }
+}
+
+final recentlyViewedControllerProvider =
+    AsyncNotifierProvider<RecentlyViewedController, List<ProductModel>>(
+  RecentlyViewedController.new,
+);

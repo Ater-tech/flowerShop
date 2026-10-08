@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/providers/button_nav_bar/bottom_nav_provider.dart';
-import 'package:mobile/screens/crud_product/add_product_entry_page.dart';
+import 'package:mobile/screens/crud_product/add_product/add_product_entry_page.dart';
 
 /// "Soting" (index 2) alohida oqim — push bilan ochiladi, currentIndex
 /// o'zgarmaydi. Qolgan to'rttasi doimiy tab: ularni HomeShell'dagi

@@ -7,14 +7,14 @@ import 'package:mobile/screens/home_screen/product_cart/card_product.dart';
 // o'zingizdagi mahsulot kartochkasi widgeti importi
 
 // Kartochka o'lchamlari — o'zingizning kartochkangizga moslang.
-const double _kCardWidth = 160;
 const double _kRowHeight = 230;
+const double _kCardAspect = 0.62; // karta eni / balandligi (pastda moslang)
 const double _kGap = 12;
 
 extension on SearchTab {
   String get label => switch (this) {
-        SearchTab.recent => 'Oxirgi qidirilganlar',
         SearchTab.recommended => 'Tavsiya etilgan',
+        SearchTab.recent => 'Oxirgi qidirilganlar',
         SearchTab.popular => 'Mashhurlar',
       };
 }
@@ -36,7 +36,6 @@ class DiscoverSection extends ConsumerWidget {
           duration: const Duration(milliseconds: 200),
           // Har bir tab o'z providerini o'zi kuzatadi (alohida widget).
           child: switch (tab) {
-            SearchTab.recent => const _RecentTab(key: ValueKey('recent')),
             SearchTab.recommended => _AsyncProducts(
                 key: const ValueKey('recommended'),
                 provider: recommendedProductsProvider,
@@ -47,6 +46,7 @@ class DiscoverSection extends ConsumerWidget {
                 provider: popularProductsProvider,
                 onRetry: () => ref.invalidate(popularProductsProvider),
               ),
+            SearchTab.recent => const _RecentTab(key: ValueKey('recent')),
           },
         ),
       ],
@@ -80,12 +80,18 @@ class _TabBar extends ConsumerWidget {
 }
 
 // recentlyViewed kodingiz ulangach, shu yerda provider'ni kuzating.
-class _RecentTab extends StatelessWidget {
+class _RecentTab extends ConsumerWidget {
   const _RecentTab({super.key});
 
   @override
-  Widget build(BuildContext context) =>
-      const _Message("Hali hech narsa ko'rilmagan");
+  Widget build(BuildContext context, WidgetRef ref) {
+    final items = ref.watch(recentlyViewedControllerProvider).value ??
+        const <ProductModel>[];
+
+    if (items.isEmpty) return const _Message("Hali hech narsa ko'rilmagan");
+
+    return _ProductsGrid(products: items);
+  }
 }
 
 class _AsyncProducts extends ConsumerWidget {
@@ -110,27 +116,25 @@ class _AsyncProducts extends ConsumerWidget {
   }
 }
 
-/// Yonga suriladigan, 2 qatorli grid.
+/// Yonma-yon 2 ustun, pastga davom etadi. Scroll'ni sahifaning o'zi boshqaradi.
 class _ProductsGrid extends StatelessWidget {
   const _ProductsGrid({required this.products});
   final List<ProductModel> products;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: _kRowHeight * 2 + _kGap,
-      child: GridView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // 2 qator
-          mainAxisSpacing: _kGap,
-          crossAxisSpacing: _kGap,
-          mainAxisExtent: _kCardWidth, // yonga qarab kenglik
-        ),
-        itemCount: products.length,
-        itemBuilder: (_, i) => ProductCard(product: products[i]), // product kartochka
+    return GridView.builder(
+      shrinkWrap: true, // balandligini kontentga moslaydi
+      physics: const NeverScrollableScrollPhysics(), // ichki scroll yo'q, tashqi CustomScrollView scroll qiladi
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: _kGap,
+        crossAxisSpacing: _kGap,
+        childAspectRatio: _kCardAspect,
       ),
+      itemCount: products.length,
+      itemBuilder: (_, i) => ProductCard(product: products[i]),
     );
   }
 }

@@ -70,7 +70,6 @@ class _SearchState extends ConsumerState<SearchPage> {
                             .read(searchHistoryControllerProvider.notifier)
                             .add(query);
                         FocusScope.of(context).unfocus();
-                        debugPrint('history tapped: $query');
                       },
                     ),
                   ),

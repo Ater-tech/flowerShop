@@ -1,4 +1,14 @@
 // edit_product_controller.dart
+import 'dart:io';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/error_handler/error_result.dart';
+import 'package:mobile/error_handler/failure.dart';
+import 'package:mobile/providers/button_nav_bar/orders_provider.dart';
+import 'package:mobile/providers/product_provider/product_detail_provider.dart';
+import 'package:mobile/providers/product_provider/product_repo_providers.dart';
+import 'package:mobile/providers/product_provider/product_search_providers.dart';
+
 class EditProductState {
   final bool isSaving;
   final bool isDeleting;

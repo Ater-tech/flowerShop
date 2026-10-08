@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/screens/crud_product/update_product/update_page.dart';
 // import 'package:mobile/models/product_model.dart';
 import 'package:mobile/screens/home_screen/product_cart/widget/product_card.dart';
 
@@ -13,7 +14,8 @@ class OrdersPage extends StatefulWidget {
   State<OrdersPage> createState() => _OrdersPageState();
 }
 
-class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateMixin {
+class _OrdersPageState extends State<OrdersPage>
+    with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
@@ -56,9 +58,12 @@ class _OrdersTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(myOrdersProvider).when(
+    return ref
+        .watch(myOrdersProvider)
+        .when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, _) => _ErrorState(onRetry: () => ref.invalidate(myOrdersProvider)),
+          error: (_, _) =>
+              _ErrorState(onRetry: () => ref.invalidate(myOrdersProvider)),
           data: (orders) => orders.isEmpty
               ? const _EmptyState(text: "Hali buyurtma yo'q")
               : ListView.builder(
@@ -98,9 +103,15 @@ class _OrderCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Buyurtma #${order.id}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    'Buyurtma #${order.id}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(12),
@@ -138,9 +149,12 @@ class _MyProductsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(myProductsProvider).when(
+    return ref
+        .watch(myProductsProvider)
+        .when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, _) => _ErrorState(onRetry: () => ref.invalidate(myProductsProvider)),
+          error: (_, _) =>
+              _ErrorState(onRetry: () => ref.invalidate(myProductsProvider)),
           data: (products) => products.isEmpty
               ? const _EmptyState(text: "Hali mahsulot qo'shilmagan")
               : GridView.builder(
@@ -155,10 +169,19 @@ class _MyProductsTab extends ConsumerWidget {
                   itemBuilder: (_, i) {
                     final p = products[i];
                     //`status`/`available` maydon nomlari ProductModel
-                    final isFaded = p.status != 'active' || p.available == false;
+                    final isFaded =
+                        p.status != 'active' || p.available == false;
                     return Opacity(
                       opacity: isFaded ? 0.5 : 1.0,
-                      child: ProductCard(product: p), //ProductCard(product: p)
+                      child: InkWell(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditProductPage(product: p),
+                          ),
+                        ),
+                        child: ProductCard(product: p),
+                      ), //ProductCard(product: p)
                     );
                   },
                 ),
@@ -174,7 +197,9 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text(text, style: const TextStyle(color: Colors.grey)));
+    return Center(
+      child: Text(text, style: const TextStyle(color: Colors.grey)),
+    );
   }
 }
 

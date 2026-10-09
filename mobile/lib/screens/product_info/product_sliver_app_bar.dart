@@ -39,7 +39,7 @@ class ProductSliverAppBar extends ConsumerWidget {
           child: PageView.builder(
             itemCount: product.imageUrl.length,
             itemBuilder: (context, index) => CachedNetworkImage(
-              imageUrl: product.imageUrl[index],
+              imageUrl: product.imageUrl,
               fit: BoxFit.cover,
               placeholder: (context, url){
                 return const Center(

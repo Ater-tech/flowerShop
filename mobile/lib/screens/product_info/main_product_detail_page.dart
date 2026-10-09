@@ -5,6 +5,7 @@ import 'package:mobile/providers/product_provider/product_detail_provider.dart';
 import 'package:mobile/providers/search_providers.dart';
 import 'package:mobile/screens/product_info/product_info_container.dart';
 import 'product_sliver_app_bar.dart';
+import 'add_to_cart_bar.dart';
 import 'price_section.dart';
 
 class ProductDetailPage extends ConsumerWidget {
@@ -24,6 +25,9 @@ class ProductDetailPage extends ConsumerWidget {
       }
     });
     return Scaffold(
+      bottomNavigationBar: productAsync.value == null
+          ? null
+          : AddToCartBar(product: productAsync.value!),
       body: switch (productAsync) {
         AsyncData(:final value) => CustomScrollView(
           slivers: [

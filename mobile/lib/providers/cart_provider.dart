@@ -8,9 +8,7 @@ import 'package:mobile/repository/cart_item/cart_repository.dart';
 import '../models/cart_item_model.dart';
 
 final cartRepositoryProvider = Provider<CartRepository>((ref) {
-  return CartRepositoryImpl(
-    CartRemoteDataSource(ref.watch(apiProvider).dio),
-  );
+  return CartRepositoryImpl(CartRemoteDataSource(ref.watch(apiProvider).dio));
 });
 
 /// Savat ro'yxati + mutatsiyalar (qo'shish/o'zgartirish/o'chirish) shu
@@ -27,10 +25,12 @@ class CartController extends AsyncNotifier<List<CartItemModel>> {
     };
   }
 
-  Future<void> addProduct(int productId, {int quantity = 1}) async {
+  Future<bool> addProduct(int productId, {int quantity = 1}) async {
     if (await _repo.addProduct(productId, quantity) case Success()) {
       await _reload();
+      return true;
     }
+    return false;
   }
 
   Future<void> updateQuantity(int itemId, int quantity) async {
@@ -52,7 +52,9 @@ class CartController extends AsyncNotifier<List<CartItemModel>> {
 }
 
 final cartControllerProvider =
-    AsyncNotifierProvider<CartController, List<CartItemModel>>(CartController.new);
+    AsyncNotifierProvider<CartController, List<CartItemModel>>(
+      CartController.new,
+    );
 
 /// Umumiy narx — har bir qator narxi * soni yig'indisi.
 final cartTotalProvider = Provider.autoDispose<double>((ref) {

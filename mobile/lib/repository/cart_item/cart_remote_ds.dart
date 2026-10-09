@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:mobile/server/api_endpoints.dart';
 
 class CartRemoteDataSource {
   CartRemoteDataSource(this._dio);
   final Dio _dio;
 
-  static const basePath = 'cart/items/';
+  static const basePath = ApiEndpoints.cartItems;
 
   Future<List<Map<String, dynamic>>> fetchItems() async {
     final res = await _dio.get<dynamic>(basePath);

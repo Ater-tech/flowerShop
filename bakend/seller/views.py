@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Seller
 from .serializers import SellerSerializer
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsProductOwnerOrReadOnly
 
 
 class SellerViewSet(viewsets.ModelViewSet):
@@ -22,3 +22,7 @@ class SellerViewSet(viewsets.ModelViewSet):
             return Response({"detail": "Sizda sotuvchi profili yo'q."}, status=404)
         serializer = self.get_serializer(seller)
         return Response(serializer.data)
+    
+
+class FlowerViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsProductOwnerOrReadOnly]

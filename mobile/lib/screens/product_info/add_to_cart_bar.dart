@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/models/cart_item_model.dart';
 import 'package:mobile/models/product_model.dart';
-import 'package:mobile/providers/cart_provider.dart';
+import 'package:mobile/providers/cart_provider/cart_provider.dart';
 import 'package:mobile/screens/bottom_menu/cart_page/cart_page.dart';
 
 class AddToCartBar extends ConsumerStatefulWidget {
@@ -123,12 +123,25 @@ class _AddToCartBarState extends ConsumerState<AddToCartBar> {
                         ),
                         SizedBox(
                           width: 28,
-                          child: Text(
-                            '${item.quantity}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
+                          height: 24,
+                          child: Center(
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 150),
+                              child: _busy
+                              ? SizedBox(
+                                key: ValueKey('loading'),
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(strokeWidth: 2,),
+                              ) 
+                              :Text(
+                                '${item.quantity}',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
                           ),
                         ),

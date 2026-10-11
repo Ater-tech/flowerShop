@@ -7,7 +7,7 @@ import 'package:mobile/providers/button_nav_bar/orders_provider.dart';
 // mavjud mahsulot rasmi/kartochka widgeti importi
 
 import '/models/cart_item_model.dart';
-import '/providers/cart_provider.dart';
+import '../../../providers/cart_provider/cart_provider.dart';
 
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});
@@ -95,14 +95,56 @@ class _CartBody extends ConsumerWidget {
   }
 }
 
-class _CartItemTile extends ConsumerWidget {
+class _CartItemTile extends ConsumerStatefulWidget {
   const _CartItemTile({required this.item});
   final CartItemModel item;
+  @override
+  ConsumerState<_CartItemTile> createState() => _CartItemState();
+}
+
+class _CartItemState extends ConsumerState<_CartItemTile> {
+  bool _busy = false;
+  Future<void> _run(Future<void> Function() action) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await action();
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _confirmDelete() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("O'chirishni tasdiqlang"),
+        content: Text("\"${widget.item.displayName}\" savatdan o'chirilsinmi?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Bekor qilish'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+            child: const Text("O'chirish"),
+          ),
+        ],
+      ),
+    );
+
+    // Dialog yopilguncha widget dispose bo'lib qolgan bo'lishi mumkin
+    if (confirmed != true || !mounted) return;
+
+    final controller = ref.read(cartControllerProvider.notifier);
+    await _run(() => controller.removeItem(widget.item.id));
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final controller = ref.read(cartControllerProvider.notifier);
-
+    final item = widget.item;
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: Padding(
@@ -145,22 +187,39 @@ class _CartItemTile extends ConsumerWidget {
             if (!item.isBouquet) ...[
               IconButton(
                 icon: const Icon(Icons.remove_circle_outline),
-                onPressed: item.quantity > 1
-                    ? () =>
-                          controller.updateQuantity(item.id, item.quantity - 1)
+                onPressed: (_busy || item.quantity > 1)
+                    ? () => _run(
+                        () => controller.updateQuantity(
+                          item.id,
+                          item.quantity - 1,
+                        ),
+                      )
                     : null,
               ),
-              Text('${item.quantity}'),
+              Center(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 150),
+                  child: _busy
+                      ? const SizedBox(
+                          key: ValueKey("loading"),
+                          width: 14,
+                          height: 14,
+                          child: CircularProgressIndicator(),
+                        )
+                      : Text('${item.quantity}'),
+                ),
+              ),
               IconButton(
                 icon: const Icon(Icons.add_circle_outline),
-                onPressed: () =>
-                    controller.updateQuantity(item.id, item.quantity + 1),
+                onPressed: () => _run(
+                  () => controller.updateQuantity(item.id, item.quantity + 1),
+                ),
               ),
             ] else
               Text('× ${item.quantity}'),
             IconButton(
               icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-              onPressed: () => controller.removeItem(item.id),
+              onPressed: _busy ? null : _confirmDelete,
             ),
           ],
         ),

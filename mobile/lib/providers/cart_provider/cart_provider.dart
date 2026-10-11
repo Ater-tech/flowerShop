@@ -5,7 +5,7 @@ import 'package:mobile/error_handler/error_result.dart';
 import 'package:mobile/repository/cart_item/cart_remote_ds.dart';
 import 'package:mobile/repository/cart_item/cart_repository_impl.dart';
 import 'package:mobile/repository/cart_item/cart_repository.dart';
-import '../models/cart_item_model.dart';
+import '../../models/cart_item_model.dart';
 
 final cartRepositoryProvider = Provider<CartRepository>((ref) {
   return CartRepositoryImpl(CartRemoteDataSource(ref.watch(apiProvider).dio));

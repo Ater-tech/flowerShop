@@ -9,3 +9,4 @@ class CartItemQuantitySerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ["quantity"]
+        

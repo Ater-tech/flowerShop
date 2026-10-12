@@ -27,4 +27,6 @@ class ApiEndpoints {
   static const mePath = '/api/users/me/';
   static const passwordPath = '/api/users/me/change-password/';
   static const cartItems = '/api/carts/items/';
+  static const upgradeToBusiness = '/api/seller/upgrade-to-business/';
+  static const orders = '/api/orders/';
 }

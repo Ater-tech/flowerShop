@@ -84,3 +84,10 @@ class CacheFailure extends Failure{
   const CacheFailure(): super("Saqlangan ma'lumotni o'qishda xatolik");
 }
 
+final class OrderRuleFailure extends Failure {
+  const OrderRuleFailure(super.message, this.code);
+
+  /// Masalan: self_purchase, role_not_allowed, active_orders ...
+  final String code;
+}
+

@@ -12,6 +12,11 @@ class Shop(models.Model):
     longitude = models.FloatField()
     is_default = models.BooleanField(default=False)
 
+    # new fields 
+    allows_delivery = models.BooleanField(default=False)  # sotuvchi o'zi dostavka qiladi
+    allows_pickup = models.BooleanField(default=True)     # xaridor borib olishi mumkin
+    allows_taxi = models.BooleanField(default=False)      # taxi haydovchisiga berib yuborishga rozi
+    
     SHOP_TYPE_CHOICES = [
         ('personal', 'Shaxsiy'),
         ('business', "Rasmiy do'kon"),

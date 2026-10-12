@@ -47,21 +47,4 @@ class PublicShopDetailView(generics.RetrieveAPIView):
             total_sold=Coalesce(Sum('products__sold_count'), 0),
         )
 
-# shop/views.py uchun ikkita kichik tuzatish:
-
-# 1) Faylning boshidagi bu qator ortiqcha (tuple yaratadi, hech narsa qilmaydi) — o'chiring:
-# total_sold=Coalesce(Sum('products__sold_count'), 0),
-
-# 2) Order.shop PROTECT bo'lgani uchun buyurtmasi bor do'konni o'chirish 500 beradi.
-#    ShopViewSet ichiga qo'shing:
-#
-# from django.db.models import ProtectedError
-#
-# def destroy(self, request, *args, **kwargs):
-#     try:
-#         return super().destroy(request, *args, **kwargs)
-#     except ProtectedError:
-#         return Response(
-#             {"detail": "Buyurtmalari bor do'konni o'chirib bo'lmaydi.", "code": "shop_has_orders"},
-#             status=409,
-#         )
+# shop/views.py uchun ikkita kichik tuzatish kiritildi

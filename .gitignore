@@ -8,3 +8,4 @@ venv/
 .flutter-plugins-dependencies
 .dart_tool/
 build/
+test/

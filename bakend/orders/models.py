@@ -5,52 +5,62 @@ from bouquets.models import BouquetComposition
 from products.models import ProductModel
 from shop.models import Shop
 
+from .domain.lifecycle import ARCHIVED_STATUSES, FulfillmentMethod, OrderStatus
+
+STATUS_LABELS = {
+    OrderStatus.NEW: "Yangi",
+    OrderStatus.ACCEPTED: "Qabul qilindi",
+    OrderStatus.COMPLETED: "Bajarildi",
+    OrderStatus.REJECTED: "Rad etildi",
+    OrderStatus.CANCELLED: "Bekor qilindi",
+    OrderStatus.EXPIRED: "Muddati o'tdi",
+}
+FULFILLMENT_LABELS = {
+    FulfillmentMethod.PICKUP: "Borib olish",
+    FulfillmentMethod.TAXI: "Taxi orqali",
+    FulfillmentMethod.SELLER_DELIVERY: "Sotuvchi yetkazadi",
+    FulfillmentMethod.MEETUP: "Kelishilgan joyda",
+}
+
 
 class Order(models.Model):
-    STATUS_CHOICES = [
-        ("new", "Yangi"),
-        ("accepted", "Qabul qilindi"),
-        ("delivering", "Yetkazilmoqda"),
-        ("completed", "Bajarildi"),
-        ("cancelled", "Bekor qilindi"),
-    ]
+    """Bitta Order = bitta xaridor + bitta do'kon (sotuvchi)."""
 
-    # "Bajarilganlar" bandiga tushadigan holatlar.
-    # Frontend shu holatga qarab pastroqqa va xira ko'rinishga o'tkazadi.
-    COMPLETED_STATUSES = {"completed", "cancelled"}
+    STATUS_CHOICES = [(s.value, STATUS_LABELS[s]) for s in OrderStatus]
+    FULFILLMENT_CHOICES = [(m.value, FULFILLMENT_LABELS[m]) for m in FulfillmentMethod]
+
+    # "Bajarilganlar" bandi: frontend pastga tushirib, xira ko'rsatadi.
+    COMPLETED_STATUSES = frozenset(s.value for s in ARCHIVED_STATUSES)
 
     buyer = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-        related_name="orders",
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="orders",
     )
-
-    # Savatda bir nechta do'kondan mahsulot bo'lishi mumkin.
-    # Checkoutda har bir do'kon uchun alohida Order yaratiladi.
-    shop = models.ForeignKey(
-        Shop,
-        on_delete=models.PROTECT,
-        related_name="orders",
-    )
+    shop = models.ForeignKey(Shop, on_delete=models.PROTECT, related_name="orders")
 
     status = models.CharField(
-        max_length=12,
-        choices=STATUS_CHOICES,
-        default="new",
-        db_index=True,
+        max_length=12, choices=STATUS_CHOICES, default=OrderStatus.NEW.value, db_index=True,
     )
 
-    total_price = models.DecimalField(
-        max_digits=14,
-        decimal_places=3,
-        default=0,
+    fulfillment_method = models.CharField(
+        max_length=16, choices=FULFILLMENT_CHOICES, default=FulfillmentMethod.PICKUP.value,
     )
+    # MEETUP uchun: xaridor taklif qilgan joy/izoh
+    meetup_note = models.CharField(max_length=255, blank=True)
+    # Gul uchun muhim: xaridorga qachon kerak
+    desired_at = models.DateTimeField(null=True, blank=True)
+    # NEW holatda shu vaqtgacha sotuvchi javob bermasa, EXPIRED bo'ladi (null = cheksiz)
+    expires_at = models.DateTimeField(null=True, blank=True, db_index=True)
 
+    total_price = models.DecimalField(max_digits=14, decimal_places=3, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["shop", "status"]),
+            models.Index(fields=["buyer", "status"]),
+        ]
 
     @property
     def is_completed(self) -> bool:
@@ -62,56 +72,30 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     """
-    product yoki bouquet_composition'dan aynan bittasi to'ldiriladi.
+    product yoki bouquet_composition'dan ko'pi bilan bittasi to'ldirilgan bo'ladi.
 
-    Ikkalasi ham SET_NULL: mahsulot/dasta keyin o'chirilsa ham,
-    name_snapshot va unit_price_snapshot tufayli buyurtma tarixi buzilmaydi.
+    SET_NULL tufayli mahsulot o'chirilsa ikkalasi ham NULL bo'lishi mumkin,
+    shuning uchun "aynan bitta" emas, "ikkalasi birdan emas" tekshiriladi.
+    Tarix name_snapshot va unit_price_snapshot bilan saqlanadi.
     """
 
-    order = models.ForeignKey(
-        Order,
-        on_delete=models.CASCADE,
-        related_name="items",
-    )
-
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(
-        ProductModel,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="+",
+        ProductModel, on_delete=models.SET_NULL, null=True, blank=True, related_name="+",
     )
-
     bouquet_composition = models.ForeignKey(
-        BouquetComposition,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="+",
+        BouquetComposition, on_delete=models.SET_NULL, null=True, blank=True, related_name="+",
     )
-
     name_snapshot = models.CharField(max_length=150)
-
-    unit_price_snapshot = models.DecimalField(
-        max_digits=12,
-        decimal_places=3,
-    )
-
+    unit_price_snapshot = models.DecimalField(max_digits=12, decimal_places=3)
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
         constraints = [
             models.CheckConstraint(
                 check=~(
-                    models.Q(
-                        product__isnull=False,
-                        # bouquet_composition__isnull=True,
-                    )
-                    &
-                    models.Q(
-                        # product__isnull=True,
-                        bouquet_composition__isnull=False,
-                    )
+                    models.Q(product__isnull=False)
+                    & models.Q(bouquet_composition__isnull=False)
                 ),
                 name="orderitem_exactly_one_content_type",
             ),

@@ -83,5 +83,51 @@ class PolicyTests(unittest.TestCase):
         ensure_not_own_shop(buyer_id=5, shop_owner_id=6)
 
 
+
+class AccountTests(unittest.TestCase):
+    def test_kinds_and_tabs(self):
+        from orders.domain.policies import (
+            AccountKind, RoleNotAllowedError, account_kind, available_tabs, ensure_can_buy,
+        )
+        self.assertEqual(account_kind(set()), AccountKind.INDIVIDUAL)
+        self.assertEqual(account_kind({"personal"}), AccountKind.INDIVIDUAL)
+        self.assertEqual(account_kind({"personal", "business"}), AccountKind.BUSINESS)
+
+        self.assertEqual(available_tabs(set()), ["buying"])                 # oddiy xaridor
+        self.assertEqual(available_tabs({"personal"}), ["buying", "selling"])  # yakka shaxs
+        self.assertEqual(available_tabs({"business"}), ["selling"])        # do'kon
+
+        ensure_can_buy(AccountKind.INDIVIDUAL)
+        with self.assertRaises(RoleNotAllowedError):
+            ensure_can_buy(AccountKind.BUSINESS)
+
+
+
+class UpgradeTests(unittest.TestCase):
+    def test_upgrade_rules(self):
+        from orders.domain.policies import (
+            ActiveOrdersError, NotPersonalSellerError, ensure_can_upgrade_to_business as chk,
+        )
+        chk(shop_types={"personal"}, has_active_orders=False)
+        with self.assertRaises(NotPersonalSellerError):
+            chk(shop_types={"business"}, has_active_orders=False)
+        with self.assertRaises(NotPersonalSellerError):
+            chk(shop_types=set(), has_active_orders=False)
+        with self.assertRaises(ActiveOrdersError):
+            chk(shop_types={"personal"}, has_active_orders=True)
+
+
+
+class ShopTypeTests(unittest.TestCase):
+    def test_shop_type_rules(self):
+        from orders.domain.policies import ShopTypeMismatchError, ensure_shop_type_allowed as chk
+        chk(existing_types=set(), new_type="business")
+        chk(existing_types={"personal"}, new_type="personal")
+        with self.assertRaises(ShopTypeMismatchError):
+            chk(existing_types={"personal"}, new_type="business")
+        with self.assertRaises(ShopTypeMismatchError):
+            chk(existing_types={"business"}, new_type="personal")
+
+
 if __name__ == "__main__":
     unittest.main()

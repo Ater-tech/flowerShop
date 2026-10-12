@@ -1,78 +1,123 @@
-from collections import defaultdict
-from django.db import transaction
-from rest_framework import generics, permissions
+from django.db.models import Q
+from django.http import Http404
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from carts.models import CartItem
-from .models import Order, OrderItem
-from .selectors import buyer_orders
-from .serializers import OrderSerializer
+
+from .domain.lifecycle import (
+    Action, ActionNotAllowed, FulfillmentMethod, InvalidTransition, MethodNotAvailable,
+)
+from .domain.policies import (
+    RoleNotAllowedError, SelfPurchaseError, account_kind, available_tabs, can_buy,
+)
+from .models import Order
+from .selectors import buyer_orders, order_for_participant, seller_orders, shop_types_of
+from .serializers import CheckoutSerializer, OrderSerializer
+from .services import (
+    EmptyCartError, MissingSelectionError, NotParticipantError, ShopSelection,
+    checkout, perform_action,
+)
+
+_ERRORS = [
+    (SelfPurchaseError, status.HTTP_403_FORBIDDEN, "self_purchase"),
+    (RoleNotAllowedError, status.HTTP_403_FORBIDDEN, "role_not_allowed"),
+    (ActionNotAllowed, status.HTTP_403_FORBIDDEN, "action_not_allowed"),
+    (NotParticipantError, status.HTTP_404_NOT_FOUND, "not_found"),
+    (InvalidTransition, status.HTTP_409_CONFLICT, "invalid_transition"),
+    (MethodNotAvailable, status.HTTP_400_BAD_REQUEST, "method_not_available"),
+    (EmptyCartError, status.HTTP_400_BAD_REQUEST, "empty_cart"),
+    (MissingSelectionError, status.HTTP_400_BAD_REQUEST, "missing_selection"),
+]
+
+
+def error_response(exc: Exception) -> Response:
+    for cls, http_status, code in _ERRORS:
+        if isinstance(exc, cls):
+            return Response({"detail": str(exc), "code": code}, status=http_status)
+    raise exc
+
 
 class CheckoutView(APIView):
     """
-    Joriy foydalanuvchining butun savatini buyurtmaga aylantiradi.
-    Savatda bir nechta do'kondan mahsulot bo'lsa, har bir do'kon uchun
-    ALOHIDA Order yaratiladi.
+    Savatni buyurtmalarga aylantiradi: har bir do'kon uchun alohida Order.
+    Body: {"orders": [{"shop": 3, "fulfillment_method": "pickup",
+                       "meetup_note": "", "desired_at": null}, ...]}
     """
     permission_classes = [permissions.IsAuthenticated]
 
-    @transaction.atomic
     def post(self, request):
-        cart_items = list(
-            CartItem.objects.filter(user=request.user).select_related(
-                "product", "product__shop", "bouquet_composition", "bouquet_composition__shop"
+        ser = CheckoutSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        selections = {
+            row["shop"]: ShopSelection(
+                fulfillment_method=FulfillmentMethod(row["fulfillment_method"]),
+                meetup_note=row["meetup_note"].strip(),
+                desired_at=row["desired_at"],
             )
-        )
-        if not cart_items:
-            return Response({"detail": "Savat bo'sh."}, status=400)
+            for row in ser.validated_data["orders"]
+        }
+        try:
+            orders = checkout(user=request.user, selections=selections)
+        except Exception as exc:
+            return error_response(exc)
+        data = OrderSerializer(orders, many=True, context={"request": request}).data
+        return Response(data, status=status.HTTP_201_CREATED)
 
-        by_shop = defaultdict(list)
-        for item in cart_items:
-            shop = item.product.shop if item.product_id else item.bouquet_composition.shop
-            by_shop[shop].append(item)
-
-        created_orders = []
-        for shop, items in by_shop.items():
-            order = Order.objects.create(shop=shop, buyer=request.user, total_price=0)
-            total = 0
-            order_items = []
-            for item in items:
-                if item.product_id:
-                    name, price = item.product.name, item.product.price
-                else:
-                    name = f"Dasta #{item.bouquet_composition_id}"
-                    price = item.bouquet_composition.total_price
-
-                order_items.append(
-                    OrderItem(
-                        order=order,
-                        product=item.product,
-                        bouquet_composition=item.bouquet_composition,
-                        name_snapshot=name,
-                        unit_price_snapshot=price,
-                        quantity=item.quantity,
-                    )
-                )
-                total += price * item.quantity
-
-            OrderItem.objects.bulk_create(order_items)
-            order.total_price = total
-            order.save(update_fields=["total_price"])
-            created_orders.append(order)
-
-        CartItem.objects.filter(pk__in=[i.pk for i in cart_items]).delete()
-        return Response(OrderSerializer(created_orders, many=True).data, status=201)
 
 class OrderListView(generics.ListAPIView):
+    """Xaridor oynasi (Sotib olinganlar)."""
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return buyer_orders(self.request.user)
 
+
+class SellerOrderListView(generics.ListAPIView):
+    """Sotuvchi oynasi. Ixtiyoriy: ?product=<id> — shu mahsulotga kelgan so'rovlar."""
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        raw = self.request.query_params.get("product")
+        product_id = int(raw) if raw and raw.isdigit() else None
+        return seller_orders(self.request.user, product_id=product_id)
+
+
 class OrderDetailView(generics.RetrieveAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Order.objects.filter(buyer=self.request.user).prefetch_related("items")
+        return order_for_participant(self.request.user, self.kwargs["pk"])
+
+
+class OrderActionView(APIView):
+    """POST /api/orders/<pk>/actions/<accept|reject|cancel|complete>/"""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk: int, action: str):
+        try:
+            act = Action(action)
+        except ValueError:
+            raise Http404
+        try:
+            perform_action(order_id=pk, user=request.user, action=act)
+        except Order.DoesNotExist:
+            raise Http404
+        except Exception as exc:
+            return error_response(exc)
+        order = order_for_participant(request.user, pk).get()
+        return Response(OrderSerializer(order, context={"request": request}).data)
+
+
+class OrderMetaView(APIView):
+    """Flutter uchun: qaysi oynalar ko'rinadi va xarid qila oladimi."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        types = shop_types_of(request.user)
+        kind = account_kind(types)
+        return Response(
+            {"account_kind": kind.value, "can_buy": can_buy(kind), "tabs": available_tabs(types)}
+        )

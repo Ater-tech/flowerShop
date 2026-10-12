@@ -1,13 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/error_handler/error_result.dart';
 import 'package:mobile/error_handler/orders_deps.dart';
 import 'package:mobile/server/api_endpoints.dart';
 
 
 
-/// Backend: PATCH /api/shops/<id>/  (ShopViewSet manzilini o'zingizniki bilan almashtiring)
+// Backend: PATCH /api/shops/<id>/  (ShopViewSet manzilini o'zingizniki bilan almashtiring)
 class ShopHandoverRepository {
   ShopHandoverRepository(this._dio);
   final Dio _dio;

@@ -14,7 +14,7 @@ class AddToCartBar extends ConsumerStatefulWidget {
 }
 
 class _AddToCartBarState extends ConsumerState<AddToCartBar> {
-  bool _busy = false; // qo'sh-bosishdan himoya (favourites'dagi pending kabi)
+  bool _busy = false; // qayta-bosishdan himoya (favourites'dagi pending kabi)
 
   Future<void> _run(Future<void> Function() action) async {
     if (_busy) return;

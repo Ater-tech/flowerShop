@@ -26,10 +26,18 @@ class CartController extends AsyncNotifier<List<CartItemModel>> {
   }
 
   Future<bool> addProduct(int productId, {int quantity = 1}) async {
-    if (await _repo.addProduct(productId, quantity) case Success()) {
+    final items = state.value ?? const <CartItemModel>[];
+    final existing = items.where((i)=> i.product?.id == productId).firstOrNull;
+
+    final result = existing != null
+      ? await _repo.updateQuantity(existing.id, existing.quantity + quantity)
+      : await _repo.addProduct(productId, quantity);
+
+    if(result case Success()){
       await _reload();
       return true;
-    }
+    } 
+    await _reload();
     return false;
   }
 

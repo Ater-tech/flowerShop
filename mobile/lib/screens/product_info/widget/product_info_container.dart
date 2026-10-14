@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/product_model.dart';
-import 'package:mobile/screens/product_info/delevery_info_section.dart';
-import 'package:mobile/screens/product_info/description_section.dart';
-import 'package:mobile/screens/product_info/recommended_products_section.dart';
-import 'package:mobile/screens/product_info/reviews_preview_section.dart';
-import 'package:mobile/screens/product_info/seller_contact_card.dart';
-import 'package:mobile/screens/product_info/seller_stat.dart';
-import 'package:mobile/screens/product_info/smilar_shop_boutique.dart';
-import 'package:mobile/screens/product_info/weekly_sales_section.dart';
+import 'package:mobile/screens/product_info/widget/delevery_info_section.dart';
+import 'package:mobile/screens/product_info/widget/description_section.dart';
+import 'package:mobile/screens/product_info/widget/recommended_products_section.dart';
+import 'package:mobile/screens/product_info/widget/reviews_preview_section.dart';
+import 'package:mobile/screens/product_info/widget/seller_contact_card.dart';
+import 'package:mobile/screens/product_info/widget/seller_stat.dart';
+import 'package:mobile/screens/product_info/widget/smilar_shop_boutique.dart';
+import 'package:mobile/screens/product_info/widget/weekly_sales_section.dart';
 
 class ProductInfoContainer extends StatelessWidget {
   const ProductInfoContainer({super.key, required this.product});

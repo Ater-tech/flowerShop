@@ -32,7 +32,7 @@ Failure toFailure(DioException e) {
   return mapDioExceptionToFailure(e);
 }
 
-/// Dio so'rovini Result<T> ga o'raydi (loyihangizdagi Result/Failure naqshi bo'yicha).
+/// Dio so'rovini Result,T, ga o'raydi (loyihangizdagi Result/Failure naqshi bo'yicha).
 Future<Result<T>> guardRequest<T>(Future<T> Function() body) async {
   try {
     return Success<T>(await body());

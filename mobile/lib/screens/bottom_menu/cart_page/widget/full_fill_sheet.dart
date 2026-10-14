@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 const _methods = {
   'pickup': 'Borib olish',
   'taxi': 'Taxi orqali',
-  'seller_delivery': 'Sotuvchi yetkazadi',
-  'meetup': 'Kelishilgan joyda',
+  'seller_delivery': 'Sotuvchi yetkazadi',  
 };
 
 Future<List<Map<String, dynamic>>?> showFulfillmentSheet(

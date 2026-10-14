@@ -17,10 +17,15 @@ class OrderRemoteDataSource {
     return list.cast<Map<String, dynamic>>();
   }
 
-  Future<List<Map<String, dynamic>>> checkout() async{
-    final res = await _dio.post<dynamic>(checkoutPath);
+  Future<List<Map<String, dynamic>>> checkout(
+    List<Map<String, dynamic>> orders,
+  ) async{
+    final res = await _dio.post<dynamic>(
+      checkoutPath,
+      data:{'orders':orders},
+      );
     final data = res.data;
-    final list = (data is List ? data : const []);
+    final list = (data is Map ? data['results'] : data) as List? ?? const[];
     return list.cast<Map<String, dynamic>>();
   }
   Future<List<Map<String, dynamic>>> fetchMyOrders() => _fetchList(myOrdersPath);

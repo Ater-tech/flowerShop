@@ -37,9 +37,9 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<Result<List<OrderModel>>> checkout() async {
+  Future<Result<List<OrderModel>>> checkout(List<Map<String, dynamic>> orders) async {
     try{
-      final json = await _remote.checkout();
+      final json = await _remote.checkout(orders);
       return Success(json.map(OrderModel.fromJson).toList());
     } on DioException catch (e){
        return Error<List<OrderModel>>(mapDioExceptionToFailure(e));

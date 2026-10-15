@@ -39,6 +39,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "role", "stage", "notices", "actions", "can_review",
             "shop_info", "counterparty",
             "created_at", "updated_at", "items",
+            "allows_delivery", "delivery_price",
         ]
         read_only_fields = fields
 

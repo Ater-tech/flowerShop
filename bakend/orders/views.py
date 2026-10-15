@@ -53,6 +53,8 @@ class CheckoutView(APIView):
                 fulfillment_method=FulfillmentMethod(row["fulfillment_method"]),
                 meetup_note=row["meetup_note"].strip(),
                 desired_at=row["desired_at"],
+                delivery_address=row["delivery_address"].strip(),
+                delivery_fee=row["delivery_fee"],
             )
             for row in ser.validated_data["orders"]
         }

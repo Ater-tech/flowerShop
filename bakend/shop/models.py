@@ -17,6 +17,7 @@ class Shop(models.Model):
     allows_pickup = models.BooleanField(default=True)     # xaridor borib olishi mumkin
     allows_taxi = models.BooleanField(default=False)      # taxi haydovchisiga berib yuborishga rozi
     
+    delivery_price = models.DecimalField(max_digits=10, decimal_places=0,null=True, blank=True)
     SHOP_TYPE_CHOICES = [
         ('personal', 'Shaxsiy'),
         ('business', "Rasmiy do'kon"),

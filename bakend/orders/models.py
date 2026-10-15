@@ -55,6 +55,11 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    delivery_fee = models.DecimalField(default=0, max_digits=10, decimal_places=0)
+    delivery_address = models.CharField(max_length=255, blank=True)
+    delivery_lat = models.FloatField(null=True)
+    delivery_lng = models.FloatField(null=True)
+     
     class Meta:
         ordering = ["-created_at"]
         indexes = [

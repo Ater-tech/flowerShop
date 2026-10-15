@@ -37,6 +37,8 @@ class ShopSelection:
     fulfillment_method: FulfillmentMethod
     meetup_note: str = ""
     desired_at: datetime | None = None
+    delivery_fee: float = 0
+    delivery_address: str = ""
 
 
 def ensure_can_add_to_cart(*, user, shop) -> None:
@@ -93,6 +95,8 @@ def checkout(*, user, selections: dict[int, ShopSelection]) -> list[Order]:
             meetup_note=sel.meetup_note,
             desired_at=sel.desired_at,
             expires_at=expires_at,
+            delivery_address=sel.delivery_address,
+            delivery_fee=sel.delivery_fee,
         )
         lines: list[OrderItem] = []
         total = Decimal("0")
@@ -110,6 +114,7 @@ def checkout(*, user, selections: dict[int, ShopSelection]) -> list[Order]:
                     name_snapshot=name,
                     unit_price_snapshot=price,
                     quantity=item.quantity,
+                    
                 )
             )
             total += price * item.quantity

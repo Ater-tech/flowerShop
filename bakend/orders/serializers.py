@@ -42,7 +42,11 @@ class OrderSerializer(serializers.ModelSerializer):
             "allows_delivery", "delivery_price",
         ]
         read_only_fields = fields
-
+    
+    def get_allows_delivery(self, obj):
+        shop = obj.shop
+        return shop.allows_delivery
+        
     def _actor(self, obj: Order) -> Actor:
         user = self.context["request"].user
         return Actor.SELLER if obj.shop.seller.user_id == user.id else Actor.BUYER
@@ -96,8 +100,8 @@ class ShopSelectionSerializer(serializers.Serializer):
     fulfillment_method = serializers.ChoiceField(choices=[m.value for m in FulfillmentMethod])
     meetup_note = serializers.CharField(max_length=255, required=False, allow_blank=True, default="")
     desired_at = serializers.DateTimeField(required=False, allow_null=True, default=None)
-    delivery_address = serializers.CharField(max_length=255),
-    delivery_fee = serializers.DecimalField(max_digits=10, decimal_places=0),
+    delivery_address = serializers.CharField(max_length=255, required=False, default="Noma'lum"),
+    delivery_fee = serializers.DecimalField(max_digits=10, decimal_places=0, required=False, allow_null=True, default=None),
     
     def validate_desired_at(self, value):
         if value is not None and value <= timezone.now():

@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.utils import timezone
 from rest_framework import serializers
 
@@ -103,7 +105,10 @@ class ShopSelectionSerializer(serializers.Serializer):
     delivery_address = serializers.CharField(max_length=255, required=False, 
                                              allow_blank=True, default="Noma'lum")
     delivery_fee = serializers.DecimalField(max_digits=10, decimal_places=0, required=False,
-                                            allow_null=True, default=None)
+                                            allow_null=True, default=Decimal("0"))
+
+    def validate_delivery_fee(self, value):
+        return value if value is not None else Decimal("0")
     
     def validate_desired_at(self, value):
         if value is not None and value <= timezone.now():

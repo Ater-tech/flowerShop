@@ -37,7 +37,7 @@ class ShopSelection:
     fulfillment_method: FulfillmentMethod
     meetup_note: str = ""
     desired_at: datetime | None = None
-    delivery_fee: float = 0
+    delivery_fee: Decimal | None = Decimal("0")
     delivery_address: str = ""
 
 
@@ -96,7 +96,7 @@ def checkout(*, user, selections: dict[int, ShopSelection]) -> list[Order]:
             desired_at=sel.desired_at,
             expires_at=expires_at,
             delivery_address=sel.delivery_address,
-            delivery_fee=sel.delivery_fee,
+            delivery_fee=sel.delivery_fee if sel.delivery_fee is not None else Decimal("0"),
         )
         lines: list[OrderItem] = []
         total = Decimal("0")

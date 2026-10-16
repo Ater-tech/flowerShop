@@ -1,4 +1,5 @@
 import unittest
+from decimal import Decimal
 
 from django.test import SimpleTestCase
 
@@ -20,7 +21,21 @@ class CheckoutSerializerTests(SimpleTestCase):
         self.assertTrue(serializer.is_valid(), serializer.errors)
         row = serializer.validated_data["orders"][0]
         self.assertEqual(row["delivery_address"], "Noma'lum")
-        self.assertIsNone(row["delivery_fee"])
+        self.assertEqual(row["delivery_fee"], Decimal("0"))
+
+    def test_null_delivery_fee_is_normalized_to_zero(self):
+        serializer = CheckoutSerializer(data={
+            "orders": [{
+                "shop": 1,
+                "fulfillment_method": "pickup",
+                "delivery_fee": None,
+            }],
+        })
+
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        self.assertEqual(
+            serializer.validated_data["orders"][0]["delivery_fee"], Decimal("0")
+        )
 
 
 class TransitionTests(unittest.TestCase):

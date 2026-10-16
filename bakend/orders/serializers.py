@@ -48,6 +48,9 @@ class OrderSerializer(serializers.ModelSerializer):
     def get_allows_delivery(self, obj):
         shop = obj.shop
         return shop.allows_delivery
+
+    def get_delivery_price(self, obj):
+        return obj.delivery_fee
         
     def _actor(self, obj: Order) -> Actor:
         user = self.context["request"].user

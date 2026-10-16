@@ -1,5 +1,6 @@
 import unittest
 from decimal import Decimal
+from types import SimpleNamespace
 
 from django.test import SimpleTestCase
 
@@ -9,7 +10,7 @@ from orders.domain.lifecycle import (
     allowed_actions, available_methods, can_review, ensure_method_available,
     notices_for, request_priority, stage_for, transition,
 )
-from orders.serializers import CheckoutSerializer
+from orders.serializers import CheckoutSerializer, OrderSerializer
 
 
 class CheckoutSerializerTests(SimpleTestCase):
@@ -35,6 +36,16 @@ class CheckoutSerializerTests(SimpleTestCase):
         self.assertTrue(serializer.is_valid(), serializer.errors)
         self.assertEqual(
             serializer.validated_data["orders"][0]["delivery_fee"], Decimal("0")
+        )
+
+
+class OrderSerializerTests(SimpleTestCase):
+    def test_delivery_price_uses_order_fee_snapshot(self):
+        serializer = OrderSerializer()
+
+        self.assertEqual(
+            serializer.get_delivery_price(SimpleNamespace(delivery_fee=Decimal("15000"))),
+            Decimal("15000"),
         )
 
 

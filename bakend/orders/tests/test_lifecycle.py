@@ -1,11 +1,26 @@
 import unittest
 
+from django.test import SimpleTestCase
+
 from orders.domain.lifecycle import (
     Action, Actor, ActionNotAllowed, FulfillmentMethod as M, InvalidTransition,
     MethodNotAvailable, Notice, OrderStatus as S, SellerOptions,
     allowed_actions, available_methods, can_review, ensure_method_available,
     notices_for, request_priority, stage_for, transition,
 )
+from orders.serializers import CheckoutSerializer
+
+
+class CheckoutSerializerTests(SimpleTestCase):
+    def test_optional_delivery_fields_are_present_with_defaults(self):
+        serializer = CheckoutSerializer(data={
+            "orders": [{"shop": 1, "fulfillment_method": "pickup"}],
+        })
+
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        row = serializer.validated_data["orders"][0]
+        self.assertEqual(row["delivery_address"], "Noma'lum")
+        self.assertIsNone(row["delivery_fee"])
 
 
 class TransitionTests(unittest.TestCase):
